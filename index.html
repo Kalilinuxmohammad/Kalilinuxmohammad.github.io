@@ -2,12 +2,800 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalilinuxmohammad</title>
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Kalilinuxmohammad — Cybersecurity, Linux, Networking and CTF Portfolio">
+
+    <meta name="author"
+          content="Kalilinuxmohammad">
+
+    <title>Kalilinuxmohammad | Cybersecurity Portfolio</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Courier New", monospace;
+            background: #05070a;
+            color: #d7dde5;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(rgba(0,255,140,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,255,140,0.025) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(
+                circle at center,
+                transparent 20%,
+                rgba(0,0,0,0.65) 100%
+            );
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        ::selection {
+            background: #00ff88;
+            color: #05070a;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(1100px, 90%);
+            margin: auto;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(5, 7, 10, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,255,136,0.12);
+        }
+
+        .nav-inner {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            color: #00ff88;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .logo::before {
+            content: "> ";
+            color: #65707d;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #9ca6b3;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0,255,136,0.6);
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 70px;
+        }
+
+        .hero-content {
+            max-width: 850px;
+        }
+
+        .terminal-line {
+            color: #68727e;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .terminal-line span {
+            color: #00ff88;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 8vw, 82px);
+            line-height: 1.05;
+            color: #f2f5f7;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 strong {
+            color: #00ff88;
+            text-shadow: 0 0 25px rgba(0,255,136,0.35);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(18px, 3vw, 25px);
+            color: #8f9aa7;
+            margin-bottom: 30px;
+        }
+
+        .hero-description {
+            max-width: 700px;
+            color: #697583;
+            margin-bottom: 35px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 22px;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #00ff88;
+            color: #05070a;
+            box-shadow: 0 0 25px rgba(0,255,136,0.3);
+        }
+
+        .btn.secondary {
+            border-color: #313b46;
+            color: #aab3bd;
+        }
+
+        .btn.secondary:hover {
+            border-color: #00ff88;
+            color: #00ff88;
+            background: transparent;
+        }
+
+        /* SECTIONS */
+
+        section {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            margin-bottom: 45px;
+        }
+
+        .section-title span {
+            color: #00ff88;
+        }
+
+        .section-title h2 {
+            font-size: 34px;
+            color: #f2f5f7;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #687583;
+        }
+
+        /* ABOUT */
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+        }
+
+        .card {
+            border: 1px solid #1a222b;
+            background: rgba(10,14,19,0.75);
+            padding: 30px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(0,255,136,0.35);
+            transform: translateY(-4px);
+        }
+
+        .card h3 {
+            color: #00ff88;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #7f8a97;
+        }
+
+        /* SKILLS */
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .skill {
+            border: 1px solid #1a222b;
+            padding: 25px;
+            background: #080c11;
+        }
+
+        .skill h3 {
+            color: #e8edf2;
+            margin-bottom: 10px;
+        }
+
+        .skill p {
+            color: #687583;
+            font-size: 14px;
+        }
+
+        .tag {
+            display: inline-block;
+            margin: 5px 5px 0 0;
+            padding: 4px 9px;
+            border: 1px solid #26313b;
+            color: #00ff88;
+            font-size: 12px;
+        }
+
+        /* PROJECTS */
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .project {
+            position: relative;
+            padding: 30px;
+            background: #080c11;
+            border: 1px solid #1a222b;
+            transition: 0.3s;
+        }
+
+        .project:hover {
+            border-color: #00ff88;
+            box-shadow: 0 0 30px rgba(0,255,136,0.08);
+        }
+
+        .project-number {
+            color: #00ff88;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .project h3 {
+            color: #f2f5f7;
+            margin-bottom: 12px;
+        }
+
+        .project p {
+            color: #6f7b88;
+            margin-bottom: 20px;
+        }
+
+        /* TERMINAL */
+
+        .terminal {
+            background: #030506;
+            border: 1px solid #1c2822;
+            box-shadow: 0 0 40px rgba(0,255,136,0.04);
+        }
+
+        .terminal-header {
+            padding: 12px 18px;
+            border-bottom: 1px solid #18201b;
+            color: #67736c;
+        }
+
+        .terminal-body {
+            padding: 25px;
+            min-height: 220px;
+            color: #00ff88;
+        }
+
+        .terminal-body .dim {
+            color: #657067;
+        }
+
+        /* CONTACT */
+
+        .contact {
+            text-align: center;
+        }
+
+        .contact-box {
+            max-width: 750px;
+            margin: auto;
+            padding: 45px;
+            border: 1px solid #1a222b;
+            background: rgba(8,12,17,0.8);
+        }
+
+        .contact-box h2 {
+            font-size: 35px;
+            margin-bottom: 15px;
+        }
+
+        .contact-box p {
+            color: #707c88;
+            margin-bottom: 30px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid #151c23;
+            padding: 30px 0;
+            text-align: center;
+            color: #4e5965;
+            font-size: 13px;
+        }
+
+        footer span {
+            color: #00ff88;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 800px) {
+
+            .nav-links {
+                display: none;
+            }
+
+            .about-grid,
+            .projects-grid,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            section {
+                padding: 70px 0;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Kalilinuxmohammad</h1>
-    <p>Cybersecurity • Linux • Networking</p>
+
+    <nav>
+        <div class="container nav-inner">
+
+            <a href="#home" class="logo">
+                Kalilinuxmohammad
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#terminal">Terminal</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+
+        </div>
+    </nav>
+
+
+    <main>
+
+        <!-- HERO -->
+
+        <section class="hero" id="home">
+            <div class="container hero-content">
+
+                <div class="terminal-line">
+                    <span>root@kali</span>:~# whoami
+                </div>
+
+                <h1>
+                    Kalilinux<br>
+                    <strong>mohammad</strong>
+                </h1>
+
+                <div class="hero-subtitle">
+                    Cybersecurity • Linux • Networking
+                </div>
+
+                <p class="hero-description">
+                    Cybersecurity learner focused on Linux, networking,
+                    ethical security research, CTFs and building practical
+                    technical skills.
+                </p>
+
+                <div class="buttons">
+                    <a href="#projects" class="btn">
+                        View Projects
+                    </a>
+
+                    <a href="#contact" class="btn secondary">
+                        Contact Me
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- ABOUT -->
+
+        <section id="about">
+
+            <div class="container">
+
+                <div class="section-title">
+                    <p><span>01.</span> Introduction</p>
+                    <h2>About Me</h2>
+                    <p>Learning. Building. Breaking. Securing.</p>
+                </div>
+
+                <div class="about-grid">
+
+                    <div class="card">
+                        <h3>Who Am I?</h3>
+
+                        <p>
+                            I'm Kalilinuxmohammad, a cybersecurity-focused
+                            learner interested in Linux, networking,
+                            security research and practical labs.
+                        </p>
+                    </div>
+
+                    <div class="card">
+                        <h3>Current Focus</h3>
+
+                        <p>
+                            My current focus is strengthening my foundations
+                            in Linux, networking, web security, CTFs and
+                            ethical penetration testing.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- SKILLS -->
+
+        <section id="skills">
+
+            <div class="container">
+
+                <div class="section-title">
+                    <p><span>02.</span> Technical Stack</p>
+                    <h2>Skills & Technologies</h2>
+                    <p>Tools and technologies I'm learning and using.</p>
+                </div>
+
+                <div class="skills-grid">
+
+                    <div class="skill">
+                        <h3>🐧 Linux</h3>
+                        <p>
+                            Linux administration, shell environments
+                            and security tooling.
+                        </p>
+
+                        <span class="tag">Kali Linux</span>
+                        <span class="tag">Bash</span>
+                        <span class="tag">Zsh</span>
+                    </div>
+
+                    <div class="skill">
+                        <h3>🌐 Networking</h3>
+                        <p>
+                            Networking fundamentals, protocols,
+                            troubleshooting and analysis.
+                        </p>
+
+                        <span class="tag">TCP/IP</span>
+                        <span class="tag">DNS</span>
+                        <span class="tag">HTTP</span>
+                    </div>
+
+                    <div class="skill">
+                        <h3>🛡️ Cybersecurity</h3>
+                        <p>
+                            Security fundamentals, reconnaissance,
+                            web security and ethical testing.
+                        </p>
+
+                        <span class="tag">Nmap</span>
+                        <span class="tag">Burp Suite</span>
+                        <span class="tag">Wireshark</span>
+                    </div>
+
+                    <div class="skill">
+                        <h3>🧪 CTF</h3>
+                        <p>
+                            Practical security challenges and
+                            problem-solving.
+                        </p>
+
+                        <span class="tag">Web</span>
+                        <span class="tag">Crypto</span>
+                        <span class="tag">Forensics</span>
+                    </div>
+
+                    <div class="skill">
+                        <h3>🐳 Containers</h3>
+                        <p>
+                            Working with containerized applications
+                            and security labs.
+                        </p>
+
+                        <span class="tag">Docker</span>
+                        <span class="tag">Labs</span>
+                    </div>
+
+                    <div class="skill">
+                        <h3>🔧 Tools</h3>
+                        <p>
+                            A growing toolkit for system and
+                            security research.
+                        </p>
+
+                        <span class="tag">Git</span>
+                        <span class="tag">Nmap</span>
+                        <span class="tag">Curl</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- PROJECTS -->
+
+        <section id="projects">
+
+            <div class="container">
+
+                <div class="section-title">
+                    <p><span>03.</span> Work</p>
+                    <h2>Projects & Labs</h2>
+                    <p>Practical work and cybersecurity experiments.</p>
+                </div>
+
+                <div class="projects-grid">
+
+                    <div class="project">
+
+                        <div class="project-number">
+                            PROJECT_01
+                        </div>
+
+                        <h3>CTF Training Lab</h3>
+
+                        <p>
+                            A personal environment for practicing
+                            cybersecurity challenges including web,
+                            crypto, forensics and miscellaneous tasks.
+                        </p>
+
+                        <span class="tag">CTF</span>
+                        <span class="tag">Linux</span>
+                        <span class="tag">Security</span>
+
+                    </div>
+
+
+                    <div class="project">
+
+                        <div class="project-number">
+                            PROJECT_02
+                        </div>
+
+                        <h3>Web Security Lab</h3>
+
+                        <p>
+                            Practical web-security experimentation
+                            inside controlled local environments.
+                        </p>
+
+                        <span class="tag">Web Security</span>
+                        <span class="tag">Docker</span>
+                        <span class="tag">OWASP</span>
+
+                    </div>
+
+
+                    <div class="project">
+
+                        <div class="project-number">
+                            PROJECT_03
+                        </div>
+
+                        <h3>Linux Security Environment</h3>
+
+                        <p>
+                            A customized Kali Linux environment for
+                            networking, security research and labs.
+                        </p>
+
+                        <span class="tag">Kali Linux</span>
+                        <span class="tag">Shell</span>
+
+                    </div>
+
+
+                    <div class="project">
+
+                        <div class="project-number">
+                            PROJECT_04
+                        </div>
+
+                        <h3>Networking Lab</h3>
+
+                        <p>
+                            Networking experiments focused on protocols,
+                            troubleshooting and security concepts.
+                        </p>
+
+                        <span class="tag">Networking</span>
+                        <span class="tag">TCP/IP</span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TERMINAL -->
+
+        <section id="terminal">
+
+            <div class="container">
+
+                <div class="section-title">
+                    <p><span>04.</span> System</p>
+                    <h2>Interactive Terminal</h2>
+                    <p>A small glimpse into the environment.</p>
+                </div>
+
+                <div class="terminal">
+
+                    <div class="terminal-header">
+                        ● ● ● &nbsp; terminal
+                    </div>
+
+                    <div class="terminal-body">
+
+                        <div>
+                            root@kali:~# whoami
+                        </div>
+
+                        <div class="dim">
+                            Kalilinuxmohammad
+                        </div>
+
+                        <br>
+
+                        <div>
+                            root@kali:~# skills
+                        </div>
+
+                        <div class="dim">
+                            Linux | Networking | Cybersecurity | CTF
+                        </div>
+
+                        <br>
+
+                        <div>
+                            root@kali:~# status
+                        </div>
+
+                        <div class="dim">
+                            [ ONLINE ] Learning & Building...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTACT -->
+
+        <section id="contact" class="contact">
+
+            <div class="container">
+
+                <div class="contact-box">
+
+                    <h2>Let's Connect</h2>
+
+                    <p>
+                        Interested in cybersecurity, Linux,
+                        networking or technical projects?
+                    </p>
+
+                    <div class="buttons"
+                         style="justify-content:center;">
+
+                        <a href="https://github.com/Kalilinuxmohammad"
+                           class="btn"
+                           target="_blank">
+                            GitHub
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        © 2026 <span>Kalilinuxmohammad</span> —
+        Built with HTML, CSS & curiosity.
+    </footer>
+
 </body>
 </html>
