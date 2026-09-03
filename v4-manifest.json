@@ -1,0 +1,16 @@
+{
+  "version": "V4 Ultra",
+  "installed": "2026-09-03T15:24:00.279187",
+  "chapters": 12,
+  "offline": true,
+  "features": [
+    "Mission Control dashboard",
+    "XP and levels",
+    "chapter completion",
+    "bookmarks",
+    "dark/light theme",
+    "Golden Review identity",
+    "Exam Center identity",
+    "responsive UI"
+  ]
+}

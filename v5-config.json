@@ -1,0 +1,19 @@
+{
+  "version": "5.0 Ultra",
+  "chapters": 12,
+  "generated": "2026-09-03T15:31:28.747351",
+  "offline": true,
+  "features": [
+    "dashboard",
+    "xp",
+    "levels",
+    "progress",
+    "bookmarks",
+    "notes",
+    "achievements",
+    "quiz",
+    "theme",
+    "golden-review",
+    "exam-center"
+  ]
+}

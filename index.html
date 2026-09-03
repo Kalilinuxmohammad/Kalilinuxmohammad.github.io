@@ -1,1355 +1,2805 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="description" content="Kalilinuxmohammad — Cybersecurity, Linux, Networking and CTF Portfolio">
-<meta name="author" content="Kalilinuxmohammad">
-
-<title>Kalilinuxmohammad | Cybersecurity</title>
+<title>LPIC-1 WebBook</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+
+:root {
+    --bg: #080b10;
+    --panel: #0d1219;
+    --panel2: #111821;
+    --border: #263241;
+    --text: #e7edf5;
+    --muted: #94a3b8;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --green: #22c55e;
+    --yellow: #facc15;
+    --red: #ef4444;
+    --shadow: 0 12px 40px rgba(0,0,0,.35);
+    --radius: 14px;
 }
 
-html{
-    scroll-behavior:smooth;
+* {
+    box-sizing: border-box;
 }
 
-body{
-    background:#030506;
-    color:#d8dee5;
-    font-family:"Courier New",monospace;
-    line-height:1.7;
-    overflow-x:hidden;
+html {
+    scroll-behavior: smooth;
 }
 
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:-2;
-    pointer-events:none;
+body {
+    margin: 0;
+    min-height: 100vh;
     background:
-        linear-gradient(rgba(0,255,136,.025) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(0,255,136,.025) 1px,transparent 1px);
-    background-size:45px 45px;
+        radial-gradient(circle at top right, rgba(0,229,255,.08), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(124,58,237,.08), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    font-family:
+        "Noto Sans",
+        "Noto Sans Arabic",
+        "Segoe UI",
+        Tahoma,
+        Arial,
+        sans-serif;
+    line-height: 1.8;
 }
 
-body::after{
-    content:"";
-    position:fixed;
-    inset:0;
-    z-index:-1;
-    pointer-events:none;
-    background:radial-gradient(circle at center,transparent 20%,rgba(0,0,0,.75) 100%);
-}
-
-::selection{
-    background:#00ff88;
-    color:#030506;
-}
-
-a{
-    text-decoration:none;
-    color:inherit;
-}
-
-.container{
-    width:min(1150px,90%);
-    margin:auto;
-}
-
-.green{
-    color:#00ff88;
-}
-
-/* ================= NAVBAR ================= */
-
-nav{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:70px;
-    z-index:999;
-    background:rgba(3,5,6,.82);
-    backdrop-filter:blur(15px);
-    border-bottom:1px solid rgba(0,255,136,.1);
-}
-
-.nav-inner{
-    height:100%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.logo{
-    color:#00ff88;
-    font-weight:bold;
-    font-size:18px;
-}
-
-.logo::before{
-    content:"> ";
-    color:#55615c;
-}
-
-.nav-links{
-    display:flex;
-    gap:28px;
-    list-style:none;
-}
-
-.nav-links a{
-    color:#78838e;
-    font-size:13px;
-    transition:.3s;
-}
-
-.nav-links a:hover{
-    color:#00ff88;
-}
-
-.menu-btn{
-    display:none;
-    color:#00ff88;
-    font-size:24px;
-    cursor:pointer;
-}
-
-/* ================= HERO ================= */
-
-.hero{
-    min-height:100vh;
-    position:relative;
-    display:flex;
-    align-items:center;
-    padding-top:70px;
-    overflow:hidden;
-}
-
-.hero-bg{
-    position:absolute;
-    inset:0;
-    z-index:-1;
-    overflow:hidden;
-}
-
-.hero-grid{
-    position:absolute;
-    width:150%;
-    height:100%;
-    left:-25%;
-    bottom:-35%;
-    transform:perspective(600px) rotateX(55deg);
-    background-image:
-        linear-gradient(rgba(0,255,136,.055) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(0,255,136,.055) 1px,transparent 1px);
-    background-size:50px 50px;
-    mask-image:linear-gradient(to top,black,transparent);
-}
-
-.glow{
-    position:absolute;
-    width:500px;
-    height:500px;
-    border-radius:50%;
-    filter:blur(130px);
-    opacity:.12;
-}
-
-.glow-one{
-    background:#00ff88;
-    right:-100px;
-    top:10%;
-}
-
-.glow-two{
-    background:#0088ff;
-    left:-200px;
-    bottom:-200px;
-}
-
-.hero-layout{
-    display:grid;
-    grid-template-columns:1.05fr .95fr;
-    gap:70px;
-    align-items:center;
-}
-
-.command{
-    color:#64716d;
-    font-size:14px;
-    margin-bottom:18px;
-}
-
-.command span{
-    color:#00ff88;
-}
-
-.status{
-    display:inline-flex;
-    align-items:center;
-    gap:9px;
-    border:1px solid rgba(0,255,136,.18);
-    padding:6px 12px;
-    color:#69766f;
-    font-size:10px;
-    letter-spacing:2px;
-    margin-bottom:25px;
-    background:rgba(0,255,136,.025);
-}
-
-.status-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:#00ff88;
-    box-shadow:0 0 12px #00ff88;
-    animation:pulse 1.8s infinite;
-}
+/* =========================================================
+   TOP BAR
+   ========================================================= */
 
-.hero h1{
-    font-size:clamp(50px,7vw,88px);
-    line-height:.92;
-    letter-spacing:-5px;
-    color:#f0f4f7;
-    margin-bottom:25px;
-}
-
-.hero h1 span{
-    color:#00ff88;
-    text-shadow:0 0 30px rgba(0,255,136,.25);
-}
-
-.hero h2{
-    font-size:clamp(17px,2vw,24px);
-    font-weight:normal;
-    color:#909ba6;
-    margin-bottom:22px;
-}
-
-.hero h2 b{
-    color:#00ff88;
-    font-weight:normal;
-}
-
-.hero-description{
-    max-width:650px;
-    color:#66727e;
-    font-size:15px;
-    margin-bottom:30px;
-}
-
-.hero-buttons{
-    display:flex;
-    flex-wrap:wrap;
-    gap:13px;
-    margin-bottom:38px;
-}
-
-.btn{
-    display:inline-flex;
-    align-items:center;
-    gap:25px;
-    padding:13px 18px;
-    border:1px solid #29343d;
-    color:#aab4bd;
-    font-size:13px;
-    transition:.3s;
-}
-
-.btn:hover{
-    border-color:#00ff88;
-    color:#00ff88;
-    transform:translateY(-3px);
-}
-
-.btn.primary{
-    color:#030506;
-    background:#00ff88;
-    border-color:#00ff88;
-}
-
-.btn.primary:hover{
-    color:#030506;
-    box-shadow:0 0 30px rgba(0,255,136,.25);
-}
-
-.hero-meta{
-    display:flex;
-    gap:35px;
-    border-top:1px solid #17201f;
-    padding-top:22px;
-}
+.lpic-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 
-.hero-meta div{
-    display:flex;
-    flex-direction:column;
-}
+    height: 72px;
 
-.hero-meta span{
-    color:#4f5a63;
-    font-size:9px;
-    letter-spacing:2px;
-}
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-.hero-meta strong{
-    color:#87928c;
-    font-size:12px;
-    font-weight:normal;
-}
+    padding: 0 28px;
 
-/* ================= TERMINAL ================= */
+    background: rgba(8,11,16,.94);
+    backdrop-filter: blur(18px);
 
-.terminal{
-    border:1px solid #1d2a24;
-    background:rgba(3,6,7,.92);
-    box-shadow:0 0 60px rgba(0,255,136,.05);
-    animation:float 5s ease-in-out infinite;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 8px 30px rgba(0,0,0,.25);
 }
 
-.terminal-head{
-    height:44px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 15px;
-    border-bottom:1px solid #17211c;
-    color:#55625b;
-    font-size:11px;
-}
+.lpic-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 
-.dots{
-    display:flex;
-    gap:6px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 800;
+    letter-spacing: .5px;
 }
 
-.dots i{
-    width:8px;
-    height:8px;
-    display:block;
-    border:1px solid #344139;
-    border-radius:50%;
-}
+.lpic-logo {
+    width: 42px;
+    height: 42px;
 
-.terminal-body{
-    padding:28px;
-    min-height:380px;
-    font-size:13px;
-}
+    display: grid;
+    place-items: center;
 
-.terminal-line{
-    color:#89968f;
-    margin-bottom:6px;
-}
+    border-radius: 12px;
 
-.terminal-line .prompt{
-    color:#00ff88;
-}
+    background: linear-gradient(
+        135deg,
+        var(--accent),
+        var(--accent2)
+    );
 
-.terminal-dim{
-    color:#56635c;
-    padding-left:18px;
-}
+    color: #020617;
+    font-weight: 1000;
 
-.terminal-ok{
-    color:#00ff88;
+    box-shadow:
+        0 0 20px rgba(0,229,255,.25);
 }
 
-.cursor{
-    color:#00ff88;
-    animation:blink 1s infinite;
+.lpic-brand-title {
+    font-size: 18px;
 }
 
-/* ================= GENERAL SECTIONS ================= */
-
-section{
-    padding:110px 0;
+.lpic-brand-sub {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
 }
 
-.section-label{
-    color:#00ff88;
-    font-size:11px;
-    letter-spacing:2px;
-    margin-bottom:8px;
-}
+/* =========================================================
+   LAYOUT
+   ========================================================= */
 
-.section-title{
-    font-size:38px;
-    color:#eef2f5;
-    margin-bottom:10px;
-}
+.lpic-layout {
+    width: 100%;
+    max-width: 1600px;
 
-.section-description{
-    color:#626e79;
-    margin-bottom:45px;
-}
+    margin: 0 auto;
 
-/* ================= CARDS ================= */
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
 
-.grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:20px;
+    min-height: calc(100vh - 72px);
 }
 
-.card{
-    background:rgba(8,12,16,.75);
-    border:1px solid #192229;
-    padding:28px;
-    transition:.3s;
-}
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
 
-.card:hover{
-    transform:translateY(-5px);
-    border-color:rgba(0,255,136,.4);
-    box-shadow:0 10px 35px rgba(0,0,0,.25);
-}
+.lpic-sidebar {
+    position: sticky;
+    top: 72px;
 
-.card-icon{
-    font-size:25px;
-    margin-bottom:15px;
-}
+    height: calc(100vh - 72px);
 
-.card h3{
-    color:#e7edf1;
-    margin-bottom:10px;
-}
+    overflow-y: auto;
 
-.card p{
-    color:#697580;
-    font-size:14px;
-}
+    padding: 22px 16px;
 
-.tags{
-    margin-top:18px;
-}
+    background: rgba(13,18,25,.96);
 
-.tag{
-    display:inline-block;
-    border:1px solid #26323a;
-    color:#00ff88;
-    padding:3px 8px;
-    margin:3px;
-    font-size:10px;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
 }
 
-/* ================= ABOUT ================= */
-
-.about-layout{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:25px;
-}
+.lpic-sidebar-title {
+    padding: 8px 12px 14px;
 
-.about-box{
-    border:1px solid #192229;
-    padding:30px;
-    background:#070b0f;
-}
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 800;
 
-.about-box h3{
-    color:#00ff88;
-    margin-bottom:15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.about-box p{
-    color:#6c7883;
+.lpic-chapter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
-/* ================= PROJECTS ================= */
-
-.projects{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:25px;
-}
+.lpic-chapter-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 
-.project{
-    border:1px solid #192229;
-    background:#070b0f;
-    padding:30px;
-    transition:.3s;
-}
+    padding: 10px 12px;
 
-.project:hover{
-    border-color:#00ff88;
-    box-shadow:0 0 35px rgba(0,255,136,.05);
-}
+    border: 1px solid transparent;
+    border-radius: 10px;
 
-.project-number{
-    color:#00ff88;
-    font-size:11px;
-    margin-bottom:15px;
-}
+    color: var(--muted);
+    text-decoration: none;
 
-.project h3{
-    color:#eef2f5;
-    margin-bottom:12px;
+    transition:
+        background .2s,
+        color .2s,
+        border-color .2s,
+        transform .2s;
 }
 
-.project p{
-    color:#697580;
-    font-size:14px;
+.lpic-chapter-link:hover {
+    color: var(--text);
+    background: rgba(255,255,255,.04);
+    border-color: var(--border);
+    transform: translateX(-2px);
 }
 
-/* ================= CTF ================= */
+.lpic-chapter-link.active {
+    color: var(--accent);
 
-.ctf-box{
-    border:1px solid #1b2922;
     background:
-        linear-gradient(120deg,rgba(0,255,136,.035),transparent 50%),
-        #070b0f;
-    padding:45px;
+        linear-gradient(
+            90deg,
+            rgba(0,229,255,.10),
+            rgba(124,58,237,.08)
+        );
+
+    border-color: rgba(0,229,255,.25);
+
+    box-shadow:
+        inset 3px 0 0 var(--accent);
 }
 
-.ctf-box h3{
-    font-size:27px;
-    color:#eef2f5;
-    margin-bottom:15px;
+.lpic-number {
+    width: 28px;
+    height: 28px;
+
+    flex: 0 0 28px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 8px;
+
+    background: rgba(255,255,255,.05);
+
+    font-size: 12px;
+    font-weight: 800;
 }
 
-.ctf-box p{
-    max-width:800px;
-    color:#697580;
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.lpic-main {
+    min-width: 0;
+    padding: 36px clamp(20px, 4vw, 60px) 60px;
 }
 
-/* ================= LEARNING ================= */
+/* =========================================================
+   HERO
+   ========================================================= */
 
-.timeline{
-    border-left:1px solid #22302a;
-    margin-left:10px;
-    padding-left:30px;
+.lpic-hero {
+    position: relative;
+    overflow: hidden;
+
+    margin-bottom: 30px;
+    padding: 36px;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,229,255,.07),
+            rgba(124,58,237,.08)
+        ),
+        var(--panel);
+
+    box-shadow: var(--shadow);
 }
 
-.timeline-item{
-    position:relative;
-    margin-bottom:35px;
+.lpic-hero::after {
+    content: "";
+
+    position: absolute;
+
+    width: 240px;
+    height: 240px;
+
+    right: -80px;
+    top: -100px;
+
+    border-radius: 50%;
+
+    background: rgba(0,229,255,.08);
+    filter: blur(10px);
 }
 
-.timeline-item::before{
-    content:"";
-    position:absolute;
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#00ff88;
-    left:-35px;
-    top:9px;
-    box-shadow:0 0 12px rgba(0,255,136,.5);
+.lpic-kicker {
+    position: relative;
+    z-index: 1;
+
+    color: var(--accent);
+
+    font-size: 12px;
+    font-weight: 900;
+
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
-.timeline-item span{
-    color:#00ff88;
-    font-size:11px;
+.lpic-hero h1 {
+    position: relative;
+    z-index: 1;
+
+    margin: 8px 0 8px;
+
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1.3;
 }
 
-.timeline-item h3{
-    color:#e8edf1;
-    margin:5px 0;
+.lpic-hero p {
+    position: relative;
+    z-index: 1;
+
+    max-width: 850px;
+
+    margin: 0;
+
+    color: var(--muted);
 }
 
-.timeline-item p{
-    color:#687580;
-    font-size:14px;
+/* =========================================================
+   CONTENT NORMALIZATION
+   ========================================================= */
+
+.lpic-content {
+    width: 100%;
 }
 
-/* ================= CONTACT ================= */
+.lpic-content section,
+.lpic-content article,
+.lpic-content .section,
+.lpic-content .card,
+.lpic-content .lesson,
+.lpic-content .topic {
+    margin: 0 0 22px;
+    padding: 24px;
 
-.contact{
-    text-align:center;
+    background: rgba(13,18,25,.88);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow: 0 8px 25px rgba(0,0,0,.15);
 }
 
-.contact-box{
-    border:1px solid #192229;
-    padding:55px 30px;
-    background:#070b0f;
+.lpic-content h1,
+.lpic-content h2,
+.lpic-content h3,
+.lpic-content h4 {
+    color: var(--text);
+    line-height: 1.45;
 }
 
-.contact-box h2{
-    font-size:38px;
-    color:#eef2f5;
-    margin-bottom:15px;
+.lpic-content h2 {
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid var(--border);
 }
 
-.contact-box p{
-    color:#697580;
-    margin-bottom:30px;
+.lpic-content h3 {
+    color: var(--accent);
 }
 
-/* ================= FOOTER ================= */
-
-footer{
-    border-top:1px solid #151e23;
-    text-align:center;
-    padding:30px;
-    color:#4d5962;
-    font-size:11px;
+.lpic-content p {
+    color: #cbd5e1;
 }
 
-footer span{
-    color:#00ff88;
+.lpic-content strong {
+    color: #fff;
 }
 
-/* ================= ANIMATIONS ================= */
+.lpic-content a {
+    color: var(--accent);
+}
 
-@keyframes pulse{
-    0%,100%{
-        opacity:1;
-        transform:scale(1);
+.lpic-content ul,
+.lpic-content ol {
+    padding-right: 28px;
+}
+
+.lpic-content li {
+    margin: 6px 0;
+}
+
+/* =========================================================
+   CODE
+   ========================================================= */
+
+.lpic-content pre {
+    overflow-x: auto;
+
+    margin: 18px 0;
+    padding: 18px;
+
+    direction: ltr;
+    text-align: left;
+
+    background: #05070a;
+
+    border: 1px solid #202b38;
+    border-radius: 12px;
+
+    box-shadow:
+        inset 0 0 30px rgba(0,0,0,.25);
+}
+
+.lpic-content code {
+    font-family:
+        "Fira Code",
+        "Cascadia Code",
+        Consolas,
+        monospace;
+
+    font-size: .92em;
+}
+
+.lpic-content :not(pre) > code {
+    padding: 2px 7px;
+
+    color: var(--accent);
+
+    background: rgba(0,229,255,.07);
+
+    border-radius: 6px;
+}
+
+/* =========================================================
+   TABLES
+   ========================================================= */
+
+.lpic-content table {
+    width: 100%;
+
+    margin: 20px 0;
+
+    border-collapse: collapse;
+
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.lpic-content th,
+.lpic-content td {
+    padding: 12px 14px;
+
+    border: 1px solid var(--border);
+
+    text-align: right;
+}
+
+.lpic-content th {
+    background: rgba(0,229,255,.08);
+    color: var(--accent);
+}
+
+.lpic-content tr:nth-child(even) td {
+    background: rgba(255,255,255,.025);
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.lpic-content button,
+.lpic-content .btn,
+.lpic-content input[type="button"],
+.lpic-content input[type="submit"] {
+    border: 1px solid rgba(0,229,255,.35);
+
+    border-radius: 9px;
+
+    padding: 9px 16px;
+
+    background: rgba(0,229,255,.08);
+
+    color: var(--accent);
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.lpic-content button:hover,
+.lpic-content .btn:hover,
+.lpic-content input[type="button"]:hover,
+.lpic-content input[type="submit"]:hover {
+    background: rgba(0,229,255,.16);
+
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   CHAPTER NAVIGATION
+   ========================================================= */
+
+.lpic-navigation {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+
+    margin-top: 35px;
+}
+
+.lpic-nav-link {
+    display: block;
+
+    padding: 18px 20px;
+
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    background: var(--panel);
+
+    color: var(--text);
+    text-decoration: none;
+
+    transition: .2s;
+}
+
+.lpic-nav-link:hover {
+    border-color: rgba(0,229,255,.4);
+
+    background: var(--panel2);
+
+    transform: translateY(-2px);
+}
+
+.lpic-nav-next {
+    text-align: left;
+}
+
+.lpic-nav-prev {
+    text-align: right;
+}
+
+.lpic-nav-label {
+    display: block;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.lpic-nav-title {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--accent);
+
+    font-weight: 800;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.lpic-footer {
+    padding: 25px;
+
+    border-top: 1px solid var(--border);
+
+    background: var(--panel);
+
+    color: var(--muted);
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .lpic-layout {
+        grid-template-columns: 1fr;
     }
-    50%{
-        opacity:.35;
-        transform:scale(.75);
+
+    .lpic-sidebar {
+        position: relative;
+
+        top: auto;
+
+        height: auto;
+
+        border-right: 0;
+        border-left: 0;
+
+        border-bottom: 1px solid var(--border);
+    }
+
+    .lpic-chapter-list {
+        display: grid;
+
+        grid-template-columns:
+            repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .lpic-main {
+        padding: 25px 16px 45px;
+    }
+
+    .lpic-hero {
+        padding: 25px 20px;
     }
 }
 
-@keyframes blink{
-    0%,45%{opacity:1;}
-    46%,100%{opacity:0;}
-}
+@media (max-width: 600px) {
 
-@keyframes float{
-    0%,100%{transform:translateY(0);}
-    50%{transform:translateY(-8px);}
-}
-
-/* ================= MOBILE ================= */
-
-@media(max-width:850px){
-
-    .nav-links{
-        display:none;
+    .lpic-topbar {
+        height: 62px;
+        padding: 0 15px;
     }
 
-    .menu-btn{
-        display:block;
+    .lpic-brand-sub {
+        display: none;
     }
 
-    .hero-layout{
-        grid-template-columns:1fr;
-        gap:50px;
+    .lpic-navigation {
+        grid-template-columns: 1fr;
     }
 
-    .hero{
-        padding-top:100px;
-    }
-
-    .hero h1{
-        font-size:52px;
-        letter-spacing:-3px;
-    }
-
-    .grid,
-    .projects,
-    .about-layout{
-        grid-template-columns:1fr;
-    }
-
-    .hero-meta{
-        flex-wrap:wrap;
-        gap:20px;
-    }
-
-    section{
-        padding:80px 0;
+    .lpic-nav-next,
+    .lpic-nav-prev {
+        text-align: center;
     }
 }
 
-@media(max-width:500px){
 
-    .hero h1{
-        font-size:43px;
-    }
+.lpic-home {
+    max-width: 1100px;
+    margin: 0 auto;
+}
 
-    .hero h2{
-        font-size:17px;
-    }
+.lpic-home-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
 
-    .hero-description{
-        font-size:13px;
-    }
+.lpic-home-card {
+    display: block;
 
-    .terminal-body{
-        padding:20px;
-        font-size:11px;
-    }
+    padding: 24px;
 
-    .ctf-box{
-        padding:30px 20px;
-    }
+    background: var(--panel);
 
-    .contact-box{
-        padding:40px 20px;
-    }
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    color: var(--text);
+    text-decoration: none;
+
+    transition: .2s;
+}
+
+.lpic-home-card:hover {
+    border-color: rgba(0,229,255,.45);
+    transform: translateY(-3px);
+}
+
+.lpic-home-number {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.lpic-home-card h2 {
+    margin: 8px 0;
+    font-size: 20px;
+}
+
+.lpic-home-card p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
 }
 </style>
+
+<style id="lpic-v2-theme">
+
+/* =========================================================
+   LPIC-1 WEBBOOK V2
+   Professional Cyber Academy Interface
+   ========================================================= */
+
+:root {
+    --v2-bg: #06090e;
+    --v2-bg2: #0a0f16;
+    --v2-panel: rgba(14, 20, 29, .88);
+    --v2-panel-solid: #0e141d;
+    --v2-border: rgba(148,163,184,.14);
+    --v2-border-hover: rgba(34,211,238,.42);
+
+    --v2-text: #e8eef7;
+    --v2-muted: #8d9bad;
+
+    --v2-cyan: #22d3ee;
+    --v2-blue: #38bdf8;
+    --v2-purple: #8b5cf6;
+    --v2-green: #34d399;
+    --v2-yellow: #facc15;
+    --v2-red: #fb7185;
+
+    --v2-radius: 16px;
+
+    --v2-shadow:
+        0 18px 55px rgba(0,0,0,.30);
+
+    --v2-glow:
+        0 0 30px rgba(34,211,238,.08);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(
+            circle at 15% 0%,
+            rgba(34,211,238,.075),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(139,92,246,.07),
+            transparent 28%
+        ),
+        linear-gradient(
+            180deg,
+            var(--v2-bg),
+            var(--v2-bg2)
+        ) !important;
+
+    color: var(--v2-text) !important;
+}
+
+/* ---------------------------------------------------------
+   TOP BAR
+   --------------------------------------------------------- */
+
+.lpic-topbar {
+    height: 70px !important;
+
+    background:
+        rgba(6,9,14,.82) !important;
+
+    backdrop-filter:
+        blur(20px)
+        saturate(140%) !important;
+
+    border-bottom:
+        1px solid var(--v2-border) !important;
+
+    box-shadow:
+        0 8px 35px rgba(0,0,0,.22) !important;
+}
+
+.lpic-brand {
+    transition: transform .2s ease;
+}
+
+.lpic-brand:hover {
+    transform: translateY(-1px);
+}
+
+.lpic-logo {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--v2-cyan),
+            var(--v2-blue),
+            var(--v2-purple)
+        ) !important;
+
+    box-shadow:
+        0 0 25px rgba(34,211,238,.20) !important;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.lpic-logo:hover {
+    transform: rotate(-3deg) scale(1.04);
+
+    box-shadow:
+        0 0 35px rgba(34,211,238,.35) !important;
+}
+
+.lpic-brand-title {
+    letter-spacing: .7px;
+}
+
+/* ---------------------------------------------------------
+   SIDEBAR
+   --------------------------------------------------------- */
+
+.lpic-sidebar {
+    background:
+        rgba(8,13,20,.82) !important;
+
+    backdrop-filter:
+        blur(16px) !important;
+
+    border-color:
+        var(--v2-border) !important;
+}
+
+.lpic-sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    color: var(--v2-cyan) !important;
+
+    letter-spacing: 1.5px;
+}
+
+.lpic-sidebar-title::before {
+    content: "◈";
+
+    font-size: 13px;
+
+    text-shadow:
+        0 0 12px rgba(34,211,238,.7);
+}
+
+.lpic-chapter-list {
+    gap: 5px !important;
+}
+
+.lpic-chapter-link {
+    position: relative;
+
+    border:
+        1px solid transparent !important;
+
+    color:
+        var(--v2-muted) !important;
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease !important;
+}
+
+.lpic-chapter-link::after {
+    content: "";
+
+    position: absolute;
+
+    right: 0;
+    top: 18%;
+
+    width: 2px;
+    height: 64%;
+
+    border-radius: 10px;
+
+    background:
+        var(--v2-cyan);
+
+    opacity: 0;
+
+    transition: opacity .2s;
+}
+
+.lpic-chapter-link:hover {
+    color: var(--v2-text) !important;
+
+    background:
+        rgba(255,255,255,.035) !important;
+
+    border-color:
+        var(--v2-border-hover) !important;
+
+    transform:
+        translateX(-3px) !important;
+}
+
+.lpic-chapter-link:hover::after,
+.lpic-chapter-link.active::after {
+    opacity: 1;
+}
+
+.lpic-chapter-link.active {
+    color: var(--v2-cyan) !important;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(34,211,238,.10),
+            rgba(139,92,246,.07)
+        ) !important;
+
+    border-color:
+        rgba(34,211,238,.20) !important;
+
+    box-shadow:
+        inset 3px 0 0 var(--v2-cyan),
+        var(--v2-glow) !important;
+}
+
+.lpic-number {
+    background:
+        rgba(255,255,255,.045) !important;
+
+    border:
+        1px solid var(--v2-border);
+
+    transition:
+        background .2s,
+        border-color .2s;
+}
+
+.lpic-chapter-link.active .lpic-number {
+    color: #031017;
+
+    background:
+        var(--v2-cyan) !important;
+
+    border-color:
+        var(--v2-cyan);
+
+    box-shadow:
+        0 0 15px rgba(34,211,238,.25);
+}
+
+/* ---------------------------------------------------------
+   MAIN
+   --------------------------------------------------------- */
+
+.lpic-main {
+    position: relative;
+}
+
+/* subtle grid */
+
+.lpic-main::before {
+    content: "";
+
+    position: fixed;
+
+    inset: 70px 0 0 280px;
+
+    pointer-events: none;
+
+    opacity: .18;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,.018) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.018) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        40px 40px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            black,
+            transparent 80%
+        );
+
+    z-index: -1;
+}
+
+/* ---------------------------------------------------------
+   HERO
+   --------------------------------------------------------- */
+
+.lpic-hero {
+    position: relative;
+
+    border:
+        1px solid var(--v2-border) !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(34,211,238,.065),
+            rgba(139,92,246,.065)
+        ),
+        var(--v2-panel) !important;
+
+    backdrop-filter:
+        blur(14px) !important;
+
+    box-shadow:
+        var(--v2-shadow),
+        var(--v2-glow) !important;
+
+    overflow: hidden;
+}
+
+.lpic-hero::before {
+    content: "";
+
+    position: absolute;
+
+    left: -100px;
+    bottom: -130px;
+
+    width: 280px;
+    height: 280px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(139,92,246,.06);
+
+    filter: blur(25px);
+}
+
+.lpic-kicker {
+    color:
+        var(--v2-cyan) !important;
+
+    text-shadow:
+        0 0 15px rgba(34,211,238,.25);
+}
+
+.lpic-hero h1 {
+    letter-spacing: -.7px;
+}
+
+/* ---------------------------------------------------------
+   CONTENT CARDS
+   --------------------------------------------------------- */
+
+.lpic-content section,
+.lpic-content article,
+.lpic-content .section,
+.lpic-content .card,
+.lpic-content .lesson,
+.lpic-content .topic {
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.025),
+            rgba(255,255,255,.008)
+        ),
+        var(--v2-panel-solid) !important;
+
+    border:
+        1px solid var(--v2-border) !important;
+
+    box-shadow:
+        0 10px 35px rgba(0,0,0,.18) !important;
+
+    transition:
+        border-color .25s ease,
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.lpic-content section:hover,
+.lpic-content article:hover,
+.lpic-content .section:hover,
+.lpic-content .card:hover,
+.lpic-content .lesson:hover,
+.lpic-content .topic:hover {
+
+    border-color:
+        rgba(34,211,238,.18) !important;
+
+    box-shadow:
+        0 16px 42px rgba(0,0,0,.25),
+        0 0 25px rgba(34,211,238,.025) !important;
+}
+
+.lpic-content h2 {
+    position: relative;
+
+    border-bottom:
+        1px solid var(--v2-border) !important;
+}
+
+.lpic-content h2::after {
+    content: "";
+
+    display: block;
+
+    width: 55px;
+    height: 2px;
+
+    margin-top: 10px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--v2-cyan),
+            var(--v2-purple)
+        );
+}
+
+.lpic-content h3 {
+    color:
+        var(--v2-cyan) !important;
+}
+
+/* ---------------------------------------------------------
+   CODE BLOCKS
+   --------------------------------------------------------- */
+
+.lpic-content pre {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #04070b,
+            #080d13
+        ) !important;
+
+    border:
+        1px solid rgba(34,211,238,.12) !important;
+
+    box-shadow:
+        inset 0 0 45px rgba(0,0,0,.25),
+        0 8px 25px rgba(0,0,0,.18) !important;
+}
+
+.lpic-content pre::before {
+    content: "●  ●  ●";
+
+    position: absolute;
+
+    top: 7px;
+    left: 14px;
+
+    color:
+        #475569;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+}
+
+.lpic-content pre code {
+    display: block;
+
+    padding-top: 15px;
+
+    color: #dbeafe;
+}
+
+/* ---------------------------------------------------------
+   INLINE CODE
+   --------------------------------------------------------- */
+
+.lpic-content :not(pre) > code {
+    color:
+        var(--v2-cyan) !important;
+
+    background:
+        rgba(34,211,238,.065) !important;
+
+    border:
+        1px solid rgba(34,211,238,.10);
+}
+
+/* ---------------------------------------------------------
+   TABLE
+   --------------------------------------------------------- */
+
+.lpic-content table {
+    border-color:
+        var(--v2-border) !important;
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.15);
+}
+
+.lpic-content th {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(34,211,238,.10),
+            rgba(139,92,246,.08)
+        ) !important;
+
+    color:
+        var(--v2-cyan) !important;
+}
+
+.lpic-content tr {
+    transition: background .15s;
+}
+
+.lpic-content tr:hover td {
+    background:
+        rgba(34,211,238,.025);
+}
+
+/* ---------------------------------------------------------
+   NAVIGATION
+   --------------------------------------------------------- */
+
+.lpic-navigation {
+    margin-top: 40px;
+}
+
+.lpic-nav-link {
+    position: relative;
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.025),
+            rgba(255,255,255,.008)
+        ),
+        var(--v2-panel-solid) !important;
+
+    border:
+        1px solid var(--v2-border) !important;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.15);
+
+    transition:
+        transform .22s ease,
+        border-color .22s ease,
+        box-shadow .22s ease;
+}
+
+.lpic-nav-link::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(34,211,238,.06),
+            transparent
+        );
+
+    transform:
+        translateX(-100%);
+
+    transition:
+        transform .5s ease;
+}
+
+.lpic-nav-link:hover::before {
+    transform:
+        translateX(100%);
+}
+
+.lpic-nav-link:hover {
+    border-color:
+        rgba(34,211,238,.28) !important;
+
+    box-shadow:
+        0 14px 38px rgba(0,0,0,.24),
+        0 0 25px rgba(34,211,238,.05);
+}
+
+/* ---------------------------------------------------------
+   FOOTER
+   --------------------------------------------------------- */
+
+.lpic-footer {
+    background:
+        rgba(7,11,17,.9) !important;
+
+    border-top:
+        1px solid var(--v2-border) !important;
+
+    color:
+        var(--v2-muted) !important;
+}
+
+/* ---------------------------------------------------------
+   SCROLLBAR
+   --------------------------------------------------------- */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(34,211,238,.35)
+        transparent;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background:
+        rgba(34,211,238,.28);
+
+    border-radius: 20px;
+}
+
+/* ---------------------------------------------------------
+   V2 UTILITY ELEMENTS
+   --------------------------------------------------------- */
+
+.v2-copy-button {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    padding: 5px 10px;
+
+    border: 1px solid rgba(34,211,238,.18);
+    border-radius: 7px;
+
+    background: rgba(10,15,22,.85);
+
+    color: var(--v2-muted);
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    opacity: .65;
+
+    transition: .2s;
+}
+
+.v2-copy-button:hover {
+    color: var(--v2-cyan);
+    border-color: rgba(34,211,238,.4);
+    opacity: 1;
+}
+
+.v2-progress {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 0%;
+    height: 3px;
+
+    z-index: 9999;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--v2-cyan),
+            var(--v2-blue),
+            var(--v2-purple)
+        );
+
+    box-shadow:
+        0 0 12px rgba(34,211,238,.5);
+}
+
+.v2-top {
+    position: fixed;
+
+    left: 24px;
+    bottom: 24px;
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid var(--v2-border);
+    border-radius: 12px;
+
+    background:
+        rgba(10,15,22,.9);
+
+    color: var(--v2-cyan);
+
+    cursor: pointer;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: .25s;
+
+    z-index: 900;
+}
+
+.v2-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.v2-top:hover {
+    border-color: var(--v2-border-hover);
+    transform: translateY(-3px);
+}
+
+.v2-toast {
+    position: fixed;
+
+    left: 50%;
+    bottom: 28px;
+
+    transform:
+        translate(-50%, 20px);
+
+    padding: 10px 18px;
+
+    border:
+        1px solid rgba(34,211,238,.25);
+
+    border-radius: 10px;
+
+    background:
+        rgba(8,13,20,.95);
+
+    color:
+        var(--v2-cyan);
+
+    box-shadow:
+        0 12px 35px rgba(0,0,0,.35);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: .25s;
+
+    z-index: 9999;
+}
+
+.v2-toast.show {
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+}
+
+@media (max-width: 900px) {
+
+    .lpic-main::before {
+        display: none;
+    }
+}
+
+</style>
+
+<style id="lpic-v3-css">
+
+/* =========================================================
+   LPIC-1 WEBBOOK V3 PREMIUM
+   ========================================================= */
+
+:root {
+    --bg: #070a0f;
+    --bg2: #0b1018;
+    --panel: rgba(15, 22, 32, .78);
+    --panel2: rgba(20, 29, 42, .88);
+    --border: rgba(120, 170, 210, .16);
+    --text: #e8f0f7;
+    --muted: #91a2b3;
+    --accent: #00e5ff;
+    --accent2: #7c4dff;
+    --success: #00e676;
+    --warning: #ffca28;
+    --danger: #ff5252;
+    --shadow: 0 20px 60px rgba(0,0,0,.42);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background:
+        radial-gradient(circle at 10% 0%, rgba(0,229,255,.08), transparent 28%),
+        radial-gradient(circle at 90% 10%, rgba(124,77,255,.10), transparent 30%),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+    color: var(--text);
+    min-height: 100vh;
+    font-family: Inter, "Segoe UI", system-ui, sans-serif;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .18;
+    background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: linear-gradient(to bottom, black, transparent 90%);
+    z-index: -1;
+}
+
+/* ---------- scrollbar ---------- */
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #05070b;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--accent), var(--accent2));
+    border-radius: 20px;
+}
+
+/* ---------- top progress ---------- */
+
+#v3-reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    z-index: 99999;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    box-shadow: 0 0 15px rgba(0,229,255,.8);
+}
+
+/* ---------- header ---------- */
+
+header,
+.site-header,
+.navbar {
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    background: rgba(7,10,15,.72) !important;
+    border-bottom: 1px solid var(--border) !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,.25);
+}
+
+header *,
+.site-header *,
+.navbar * {
+    transition: .25s ease;
+}
+
+/* ---------- sidebar ---------- */
+
+aside,
+.sidebar,
+nav.sidebar {
+    background:
+        linear-gradient(180deg, rgba(9,14,21,.94), rgba(7,10,15,.88)) !important;
+    border-right: 1px solid var(--border) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+aside a,
+.sidebar a,
+nav.sidebar a {
+    position: relative;
+    display: block;
+    margin: 5px 8px;
+    border-radius: 10px;
+    color: var(--muted) !important;
+    transition: .25s ease;
+}
+
+aside a:hover,
+.sidebar a:hover,
+nav.sidebar a:hover {
+    color: var(--text) !important;
+    background: rgba(0,229,255,.075);
+    transform: translateX(4px);
+}
+
+aside a.active,
+.sidebar a.active,
+nav.sidebar a.active {
+    color: var(--accent) !important;
+    background:
+        linear-gradient(90deg,
+            rgba(0,229,255,.14),
+            rgba(124,77,255,.07));
+    box-shadow:
+        inset 3px 0 0 var(--accent),
+        0 0 20px rgba(0,229,255,.07);
+}
+
+/* ---------- hero ---------- */
+
+.hero,
+.chapter-hero,
+.page-hero {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    background:
+        radial-gradient(circle at 80% 20%, rgba(124,77,255,.18), transparent 30%),
+        radial-gradient(circle at 20% 0%, rgba(0,229,255,.13), transparent 30%),
+        linear-gradient(135deg, rgba(16,25,38,.95), rgba(8,12,19,.96));
+    box-shadow: var(--shadow);
+}
+
+.hero::before,
+.chapter-hero::before,
+.page-hero::before {
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    right: -100px;
+    top: -120px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,229,255,.18);
+    box-shadow:
+        0 0 50px rgba(0,229,255,.08),
+        inset 0 0 50px rgba(124,77,255,.08);
+    animation: v3float 7s ease-in-out infinite;
+}
+
+@keyframes v3float {
+    50% {
+        transform: translateY(18px) rotate(8deg);
+    }
+}
+
+/* ---------- cards ---------- */
+
+.card,
+.content-card,
+section,
+article {
+    transition:
+        transform .28s ease,
+        border-color .28s ease,
+        box-shadow .28s ease;
+}
+
+.card:hover,
+.content-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(0,229,255,.22) !important;
+    box-shadow:
+        0 18px 45px rgba(0,0,0,.28),
+        0 0 25px rgba(0,229,255,.035);
+}
+
+/* ---------- headings ---------- */
+
+h1, h2, h3, h4 {
+    letter-spacing: -.02em;
+}
+
+h1 {
+    text-shadow: 0 0 28px rgba(0,229,255,.16);
+}
+
+h2 {
+    position: relative;
+}
+
+h2::after {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 2px;
+    margin-top: 9px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    box-shadow: 0 0 12px rgba(0,229,255,.45);
+}
+
+/* ---------- code ---------- */
+
+pre {
+    position: relative;
+    overflow: auto;
+    padding: 20px 22px !important;
+    border: 1px solid rgba(0,229,255,.14) !important;
+    border-radius: 14px !important;
+    background:
+        linear-gradient(145deg, rgba(3,7,12,.98), rgba(10,16,24,.96))
+        !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.025),
+        0 12px 30px rgba(0,0,0,.22);
+}
+
+code {
+    font-family: "Fira Code", "Cascadia Code", monospace !important;
+}
+
+.v3-copy {
+    position: absolute;
+    top: 9px;
+    right: 9px;
+    border: 1px solid rgba(0,229,255,.25);
+    border-radius: 8px;
+    padding: 6px 10px;
+    background: rgba(0,229,255,.08);
+    color: var(--accent);
+    cursor: pointer;
+    font-size: 12px;
+    opacity: .72;
+}
+
+.v3-copy:hover {
+    opacity: 1;
+    background: rgba(0,229,255,.16);
+}
+
+/* ---------- tables ---------- */
+
+table {
+    border-collapse: separate !important;
+    border-spacing: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(10,15,22,.65);
+}
+
+th {
+    background:
+        linear-gradient(90deg,
+            rgba(0,229,255,.11),
+            rgba(124,77,255,.08));
+    color: var(--accent);
+}
+
+td, th {
+    border-color: rgba(255,255,255,.06) !important;
+    padding: 12px 14px !important;
+}
+
+/* ---------- badges ---------- */
+
+.v3-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 4px;
+    padding: 5px 10px;
+    border: 1px solid rgba(0,229,255,.22);
+    border-radius: 999px;
+    background: rgba(0,229,255,.07);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.v3-badge.success {
+    color: var(--success);
+    border-color: rgba(0,230,118,.25);
+    background: rgba(0,230,118,.07);
+}
+
+.v3-badge.warning {
+    color: var(--warning);
+    border-color: rgba(255,202,40,.25);
+    background: rgba(255,202,40,.07);
+}
+
+/* ---------- control panel ---------- */
+
+#v3-controls {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 9990;
+}
+
+.v3-control {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(10,15,22,.86);
+    color: var(--text);
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    transition: .25s ease;
+}
+
+.v3-control:hover {
+    color: var(--accent);
+    border-color: rgba(0,229,255,.35);
+    transform: translateY(-3px);
+}
+
+/* ---------- search ---------- */
+
+#v3-search-panel {
+    position: fixed;
+    inset: 0;
+    background: rgba(2,4,7,.78);
+    backdrop-filter: blur(12px);
+    z-index: 10000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 12vh;
+}
+
+#v3-search-panel.open {
+    display: flex;
+}
+
+#v3-search-box {
+    width: min(720px, 90vw);
+    border: 1px solid rgba(0,229,255,.28);
+    border-radius: 18px;
+    background: rgba(10,16,24,.96);
+    box-shadow: 0 30px 100px rgba(0,0,0,.55);
+    overflow: hidden;
+}
+
+#v3-search-input {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    padding: 20px 22px;
+    background: transparent;
+    color: var(--text);
+    font-size: 18px;
+}
+
+#v3-search-results {
+    max-height: 60vh;
+    overflow: auto;
+    border-top: 1px solid var(--border);
+}
+
+.v3-result {
+    display: block;
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    color: var(--text);
+    text-decoration: none;
+}
+
+.v3-result:hover {
+    background: rgba(0,229,255,.07);
+}
+
+.v3-result small {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted);
+}
+
+/* ---------- toast ---------- */
+
+#v3-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translate(-50%, 30px);
+    opacity: 0;
+    padding: 11px 16px;
+    border: 1px solid rgba(0,229,255,.25);
+    border-radius: 10px;
+    background: rgba(8,13,20,.94);
+    color: var(--accent);
+    box-shadow: 0 12px 40px rgba(0,0,0,.4);
+    pointer-events: none;
+    z-index: 99999;
+    transition: .3s ease;
+}
+
+#v3-toast.show {
+    transform: translate(-50%, 0);
+    opacity: 1;
+}
+
+/* ---------- light mode ---------- */
+
+body.v3-light {
+    --bg: #eef3f8;
+    --bg2: #f7f9fc;
+    --panel: rgba(255,255,255,.82);
+    --panel2: #ffffff;
+    --border: rgba(30,50,70,.13);
+    --text: #172331;
+    --muted: #607080;
+}
+
+body.v3-light::before {
+    opacity: .08;
+}
+
+/* ---------- mobile ---------- */
+
+@media (max-width: 900px) {
+    aside,
+    .sidebar,
+    nav.sidebar {
+        transition: transform .3s ease;
+    }
+
+    .v3-mobile-sidebar-hidden aside,
+    .v3-mobile-sidebar-hidden .sidebar,
+    .v3-mobile-sidebar-hidden nav.sidebar {
+        transform: translateX(-110%);
+    }
+
+    .hero,
+    .chapter-hero,
+    .page-hero {
+        border-radius: 18px;
+    }
+}
+
+/* ---------- chapter identity ---------- */
+
+body.v3-golden .hero,
+body.v3-golden .chapter-hero {
+    background:
+        radial-gradient(circle at 80% 20%, rgba(255,193,7,.18), transparent 32%),
+        linear-gradient(135deg, rgba(38,30,8,.95), rgba(15,12,5,.98));
+}
+
+body.v3-exam .hero,
+body.v3-exam .chapter-hero {
+    background:
+        radial-gradient(circle at 80% 20%, rgba(255,82,82,.16), transparent 32%),
+        radial-gradient(circle at 20% 0%, rgba(124,77,255,.14), transparent 32%),
+        linear-gradient(135deg, rgba(26,12,18,.95), rgba(10,8,15,.98));
+}
+
+</style>
+<link rel="stylesheet" href="assets/css/v5-ultra.css">
 </head>
 
 <body>
+<div id="v3-academy-badge" class="v3-badge">CYBER ACADEMY</div>
 
-<!-- ================= NAVBAR ================= -->
 
-<nav>
-<div class="container nav-inner">
+<header class="lpic-topbar">
 
-<a href="#home" class="logo">
-Kalilinuxmohammad
+    <a class="lpic-brand" href="./index.html">
+
+        <span class="lpic-logo">
+            &lt;/&gt;
+        </span>
+
+        <span>
+            <span class="lpic-brand-title">
+                LPIC-1 WebBook
+            </span>
+
+            <span class="lpic-brand-sub">
+                Linux Professional Institute Certification
+            </span>
+        </span>
+
+    </a>
+
+</header>
+
+
+<main class="lpic-main">
+
+<div class="lpic-home">
+
+    <section class="lpic-hero">
+
+        <div class="lpic-kicker">
+            LINUX PROFESSIONAL INSTITUTE
+        </div>
+
+        <h1>
+            LPIC-1 WebBook
+        </h1>
+
+        <p>
+            دوره کامل LPIC-1 در ۱۲ فصل،
+            با ساختار یکپارچه و رابط کاربری یکسان.
+        </p>
+
+    </section>
+
+
+    <div class="lpic-home-grid">
+
+<a class="lpic-home-card"
+   href="./chapter-01/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 01
+    </div>
+
+    <h2>
+        فصل 01
+    </h2>
+
+    <p>
+        مبانی Linux و خط فرمان
+    </p>
+
 </a>
 
-<ul class="nav-links">
-<li><a href="#about">About</a></li>
-<li><a href="#skills">Skills</a></li>
-<li><a href="#projects">Projects</a></li>
-<li><a href="#ctf">CTF</a></li>
-<li><a href="#learning">Learning</a></li>
-<li><a href="#contact">Contact</a></li>
-</ul>
+<a class="lpic-home-card"
+   href="./chapter-02/index.html">
 
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <div class="lpic-home-number">
+        CHAPTER 02
+    </div>
 
-</div>
-</nav>
+    <h2>
+        فصل 02
+    </h2>
 
+    <p>
+        مدیریت فایل و دایرکتوری
+    </p>
 
-<!-- ================= HERO ================= -->
-
-<section class="hero" id="home">
-
-<div class="hero-bg">
-<div class="hero-grid"></div>
-<div class="glow glow-one"></div>
-<div class="glow glow-two"></div>
-</div>
-
-<div class="container hero-layout">
-
-<div>
-
-<div class="command">
-<span>root@kali</span>:~# whoami
-</div>
-
-<div class="status">
-<span class="status-dot"></span>
-SYSTEM ONLINE
-</div>
-
-<h1>
-KALILINUX<br>
-<span>MOHAMMAD</span>
-</h1>
-
-<h2>
-Cybersecurity <b>•</b>
-Linux <b>•</b>
-Networking
-</h2>
-
-<p class="hero-description">
-Cybersecurity learner focused on Linux, networking,
-ethical security research, CTFs and practical security labs.
-</p>
-
-<div class="hero-buttons">
-
-<a href="#projects" class="btn primary">
-./explore-projects →
 </a>
 
-<a href="https://github.com/Kalilinuxmohammad"
-target="_blank"
-class="btn">
-GitHub ↗
+<a class="lpic-home-card"
+   href="./chapter-03/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 03
+    </div>
+
+    <h2>
+        فصل 03
+    </h2>
+
+    <p>
+        GNU و Unix Commands
+    </p>
+
 </a>
 
-</div>
+<a class="lpic-home-card"
+   href="./chapter-04/index.html">
 
-<div class="hero-meta">
+    <div class="lpic-home-number">
+        CHAPTER 04
+    </div>
 
-<div>
-<span>OS</span>
-<strong>Kali Linux</strong>
-</div>
+    <h2>
+        فصل 04
+    </h2>
 
-<div>
-<span>FIELD</span>
-<strong>Cybersecurity</strong>
-</div>
+    <p>
+        Devices و Filesystems
+    </p>
 
-<div>
-<span>STATUS</span>
-<strong>Learning</strong>
-</div>
-
-</div>
-
-</div>
-
-
-<div class="terminal">
-
-<div class="terminal-head">
-
-<div class="dots">
-<i></i>
-<i></i>
-<i></i>
-</div>
-
-<span>security@kali:~</span>
-
-<span class="green">●</span>
-
-</div>
-
-<div class="terminal-body">
-
-<div class="terminal-line">
-<span class="prompt">root@kali:~#</span> system_status
-</div>
-
-<div class="terminal-ok">
-[+] System online
-</div>
-
-<div class="terminal-dim">
-Linux environment ready
-</div>
-
-<br>
-
-<div class="terminal-line">
-<span class="prompt">root@kali:~#</span> skills
-</div>
-
-<div class="terminal-dim">
-Linux
-</div>
-
-<div class="terminal-dim">
-Networking
-</div>
-
-<div class="terminal-dim">
-Cybersecurity
-</div>
-
-<div class="terminal-dim">
-CTF
-</div>
-
-<br>
-
-<div class="terminal-line">
-<span class="prompt">root@kali:~#</span> status
-</div>
-
-<div class="terminal-ok">
-[ONLINE] Learning & Building
-</div>
-
-<br>
-
-<div class="terminal-line">
-<span class="prompt">root@kali:~#</span>
-<span class="cursor">_</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= ABOUT ================= -->
-
-<section id="about">
-
-<div class="container">
-
-<div class="section-label">01 / INTRODUCTION</div>
-
-<h2 class="section-title">About Me</h2>
-
-<p class="section-description">
-Learning the fundamentals. Building practical skills.
-</p>
-
-<div class="about-layout">
-
-<div class="about-box">
-
-<h3>Who Am I?</h3>
-
-<p>
-I'm Kalilinuxmohammad, a cybersecurity-focused learner
-interested in Linux, networking, security research,
-CTFs and practical security laboratories.
-</p>
-
-</div>
-
-<div class="about-box">
-
-<h3>Current Focus</h3>
-
-<p>
-My current focus is strengthening my foundations in
-Linux administration, networking, web security,
-CTF challenges and ethical security testing.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= SKILLS ================= -->
-
-<section id="skills">
-
-<div class="container">
-
-<div class="section-label">02 / TECHNICAL STACK</div>
-
-<h2 class="section-title">Skills & Technologies</h2>
-
-<p class="section-description">
-Technologies and tools I'm learning and working with.
-</p>
-
-<div class="grid">
-
-<div class="card">
-
-<div class="card-icon">🐧</div>
-
-<h3>Linux</h3>
-
-<p>
-Linux environments, shell usage,
-system administration and security tools.
-</p>
-
-<div class="tags">
-<span class="tag">Kali Linux</span>
-<span class="tag">Bash</span>
-<span class="tag">Zsh</span>
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-icon">🌐</div>
-
-<h3>Networking</h3>
-
-<p>
-Networking fundamentals, protocols,
-troubleshooting and traffic analysis.
-</p>
-
-<div class="tags">
-<span class="tag">TCP/IP</span>
-<span class="tag">DNS</span>
-<span class="tag">HTTP</span>
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-icon">🛡️</div>
-
-<h3>Cybersecurity</h3>
-
-<p>
-Security fundamentals, reconnaissance,
-web security and ethical testing.
-</p>
-
-<div class="tags">
-<span class="tag">Nmap</span>
-<span class="tag">Burp Suite</span>
-<span class="tag">Wireshark</span>
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-icon">🧪</div>
-
-<h3>CTF</h3>
-
-<p>
-Practical security challenges and
-problem-solving across multiple categories.
-</p>
-
-<div class="tags">
-<span class="tag">Web</span>
-<span class="tag">Crypto</span>
-<span class="tag">Forensics</span>
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-icon">🐳</div>
-
-<h3>Containers</h3>
-
-<p>
-Containerized applications and controlled
-security laboratory environments.
-</p>
-
-<div class="tags">
-<span class="tag">Docker</span>
-<span class="tag">Labs</span>
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="card-icon">🔧</div>
-
-<h3>Tools</h3>
-
-<p>
-A growing toolkit for Linux,
-networking and security research.
-</p>
-
-<div class="tags">
-<span class="tag">Git</span>
-<span class="tag">Curl</span>
-<span class="tag">Nmap</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= PROJECTS ================= -->
-
-<section id="projects">
-
-<div class="container">
-
-<div class="section-label">03 / WORK</div>
-
-<h2 class="section-title">Projects & Labs</h2>
-
-<p class="section-description">
-Practical environments and security experiments.
-</p>
-
-<div class="projects">
-
-<div class="project">
-
-<div class="project-number">PROJECT_01</div>
-
-<h3>CTF Training Lab</h3>
-
-<p>
-A personal environment for practicing cybersecurity
-challenges including web, crypto, forensics and
-miscellaneous tasks.
-</p>
-
-<div class="tags">
-<span class="tag">CTF</span>
-<span class="tag">Linux</span>
-<span class="tag">Security</span>
-</div>
-
-</div>
-
-
-<div class="project">
-
-<div class="project-number">PROJECT_02</div>
-
-<h3>Web Security Lab</h3>
-
-<p>
-Controlled local environments for learning web
-security concepts and testing applications safely.
-</p>
-
-<div class="tags">
-<span class="tag">Web Security</span>
-<span class="tag">Docker</span>
-<span class="tag">OWASP</span>
-</div>
-
-</div>
-
-
-<div class="project">
-
-<div class="project-number">PROJECT_03</div>
-
-<h3>Linux Security Environment</h3>
-
-<p>
-A customized Linux environment for networking,
-security research and practical laboratories.
-</p>
-
-<div class="tags">
-<span class="tag">Kali Linux</span>
-<span class="tag">Shell</span>
-</div>
-
-</div>
-
-
-<div class="project">
-
-<div class="project-number">PROJECT_04</div>
-
-<h3>Networking Lab</h3>
-
-<p>
-Networking experiments focused on protocols,
-troubleshooting and security fundamentals.
-</p>
-
-<div class="tags">
-<span class="tag">Networking</span>
-<span class="tag">TCP/IP</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= CTF ================= -->
-
-<section id="ctf">
-
-<div class="container">
-
-<div class="section-label">04 / PRACTICE</div>
-
-<h2 class="section-title">CTF & Security Labs</h2>
-
-<p class="section-description">
-Learning by solving problems.
-</p>
-
-<div class="ctf-box">
-
-<h3>
-Capture The Flag
-</h3>
-
-<p>
-This section will contain future CTF writeups,
-challenge solutions, lessons learned and technical
-notes from controlled security labs.
-</p>
-
-<div class="tags">
-<span class="tag">Web</span>
-<span class="tag">Crypto</span>
-<span class="tag">Forensics</span>
-<span class="tag">Reverse Engineering</span>
-<span class="tag">Misc</span>
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= LEARNING ================= -->
-
-<section id="learning">
-
-<div class="container">
-
-<div class="section-label">05 / ROADMAP</div>
-
-<h2 class="section-title">Learning Path</h2>
-
-<p class="section-description">
-A practical journey through cybersecurity fundamentals.
-</p>
-
-<div class="timeline">
-
-<div class="timeline-item">
-
-<span>01 / FOUNDATION</span>
-
-<h3>Linux & Operating Systems</h3>
-
-<p>
-Command line, filesystem, permissions,
-processes and system administration.
-</p>
-
-</div>
-
-
-<div class="timeline-item">
-
-<span>02 / NETWORKING</span>
-
-<h3>Computer Networks</h3>
-
-<p>
-TCP/IP, DNS, HTTP, routing, ports,
-services and network troubleshooting.
-</p>
-
-</div>
-
-
-<div class="timeline-item">
-
-<span>03 / SECURITY</span>
-
-<h3>Cybersecurity Fundamentals</h3>
-
-<p>
-Security concepts, attack surfaces,
-defensive thinking and ethical testing.
-</p>
-
-</div>
-
-
-<div class="timeline-item">
-
-<span>04 / PRACTICE</span>
-
-<h3>CTF & Security Labs</h3>
-
-<p>
-Applying knowledge through controlled
-laboratories and cybersecurity challenges.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- ================= CONTACT ================= -->
-
-<section id="contact" class="contact">
-
-<div class="container">
-
-<div class="contact-box">
-
-<div class="section-label">
-06 / CONTACT
-</div>
-
-<h2>
-Let's Connect
-</h2>
-
-<p>
-Interested in cybersecurity, Linux,
-networking or technical projects?
-</p>
-
-<a
-href="https://github.com/Kalilinuxmohammad"
-target="_blank"
-class="btn primary">
-GitHub ↗
 </a>
 
-</div>
+<a class="lpic-home-card"
+   href="./chapter-05/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 05
+    </div>
+
+    <h2>
+        فصل 05
+    </h2>
+
+    <p>
+        Boot و Process Management
+    </p>
+
+</a>
+
+<a class="lpic-home-card"
+   href="./chapter-06/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 06
+    </div>
+
+    <h2>
+        فصل 06
+    </h2>
+
+    <p>
+        Package Management
+    </p>
+
+</a>
+
+<a class="lpic-home-card"
+   href="./chapter-07/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 07
+    </div>
+
+    <h2>
+        فصل 07
+    </h2>
+
+    <p>
+        Networking
+    </p>
+
+</a>
+
+<a class="lpic-home-card"
+   href="./chapter-08/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 08
+    </div>
+
+    <h2>
+        فصل 08
+    </h2>
+
+    <p>
+        Security
+    </p>
+
+</a>
+
+<a class="lpic-home-card"
+   href="./chapter-09/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 09
+    </div>
+
+    <h2>
+        فصل 09
+    </h2>
+
+    <p>
+        Shell و Scripting
+    </p>
+
+</a>
+
+<a class="lpic-home-card"
+   href="./chapter-10/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 10
+    </div>
+
+    <h2>
+        فصل 10
+    </h2>
+
+    <p>
+        System Administration
+    </p>
+
+</a>
+
+<a class="lpic-home-card"
+   href="./chapter-11/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 11
+    </div>
+
+    <h2>
+        فصل 11
+    </h2>
+
+    <p>
+        Golden Review
+    </p>
+
+</a>
+
+<a class="lpic-home-card"
+   href="./chapter-12/index.html">
+
+    <div class="lpic-home-number">
+        CHAPTER 12
+    </div>
+
+    <h2>
+        فصل 12
+    </h2>
+
+    <p>
+        Final Assessment &amp; Exam Center
+    </p>
+
+</a>
+
+    </div>
 
 </div>
 
-</section>
+</main>
 
 
-<!-- ================= FOOTER ================= -->
-
-<footer>
-
-© 2026
-<span>Kalilinuxmohammad</span>
-—
-Built with HTML, CSS & curiosity.
-
+<footer class="lpic-footer">
+    LPIC-1 WebBook • 12 Chapters
 </footer>
 
 
-<script>
+<script id="lpic-v2-engine">
 
-function toggleMenu(){
+(function () {
 
-    const links = document.querySelector(".nav-links");
+    "use strict";
 
-    if(links.style.display === "flex"){
-        links.style.display = "none";
-    }else{
-        links.style.display = "flex";
-        links.style.position = "absolute";
-        links.style.top = "70px";
-        links.style.left = "0";
-        links.style.width = "100%";
-        links.style.padding = "25px";
-        links.style.flexDirection = "column";
-        links.style.background = "#030506";
-        links.style.borderBottom = "1px solid #17211c";
+    /* -----------------------------------------------------
+       Reading progress
+       ----------------------------------------------------- */
+
+    const progress = document.createElement("div");
+    progress.className = "v2-progress";
+    document.body.prepend(progress);
+
+    function updateProgress() {
+
+        const doc = document.documentElement;
+
+        const scrollTop =
+            window.scrollY || doc.scrollTop;
+
+        const height =
+            doc.scrollHeight - window.innerHeight;
+
+        const percent =
+            height > 0
+                ? (scrollTop / height) * 100
+                : 0;
+
+        progress.style.width =
+            Math.min(100, Math.max(0, percent)) + "%";
     }
 
-}
+    window.addEventListener(
+        "scroll",
+        updateProgress,
+        { passive: true }
+    );
+
+    updateProgress();
+
+
+    /* -----------------------------------------------------
+       Copy buttons for code blocks
+       ----------------------------------------------------- */
+
+    document.querySelectorAll(
+        ".lpic-content pre"
+    ).forEach(function (pre) {
+
+        if (pre.querySelector(".v2-copy-button")) {
+            return;
+        }
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "v2-copy-button";
+
+        button.type = "button";
+
+        button.textContent =
+            "Copy";
+
+        button.addEventListener(
+            "click",
+            async function () {
+
+                const code =
+                    pre.querySelector("code");
+
+                const text =
+                    code
+                        ? code.innerText
+                        : pre.innerText;
+
+                try {
+
+                    await navigator.clipboard.writeText(text);
+
+                    button.textContent =
+                        "Copied ✓";
+
+                    showToast(
+                        "کد با موفقیت کپی شد"
+                    );
+
+                    setTimeout(function () {
+                        button.textContent = "Copy";
+                    }, 1500);
+
+                } catch (e) {
+
+                    button.textContent =
+                        "Select";
+
+                }
+
+            }
+        );
+
+        pre.appendChild(button);
+    });
+
+
+    /* -----------------------------------------------------
+       Back to top
+       ----------------------------------------------------- */
+
+    const topButton =
+        document.createElement("button");
+
+    topButton.className =
+        "v2-top";
+
+    topButton.type = "button";
+
+    topButton.textContent =
+        "↑";
+
+    topButton.title =
+        "بازگشت به بالا";
+
+    document.body.appendChild(topButton);
+
+    window.addEventListener(
+        "scroll",
+        function () {
+
+            if (window.scrollY > 500) {
+                topButton.classList.add("visible");
+            } else {
+                topButton.classList.remove("visible");
+            }
+
+        },
+        { passive: true }
+    );
+
+    topButton.addEventListener(
+        "click",
+        function () {
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       Toast
+       ----------------------------------------------------- */
+
+    function showToast(message) {
+
+        let toast =
+            document.querySelector(".v2-toast");
+
+        if (!toast) {
+
+            toast =
+                document.createElement("div");
+
+            toast.className =
+                "v2-toast";
+
+            document.body.appendChild(toast);
+        }
+
+        toast.textContent =
+            message;
+
+        toast.classList.add("show");
+
+        clearTimeout(
+            toast._timer
+        );
+
+        toast._timer =
+            setTimeout(function () {
+
+                toast.classList.remove("show");
+
+            }, 1800);
+    }
+
+
+    /* -----------------------------------------------------
+       External links
+       ----------------------------------------------------- */
+
+    document.querySelectorAll(
+        ".lpic-content a"
+    ).forEach(function (a) {
+
+        const href =
+            a.getAttribute("href");
+
+        if (
+            href &&
+            /^https?:\/\//i.test(href)
+        ) {
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+        }
+
+    });
+
+
+    /* -----------------------------------------------------
+       Mark V2 loaded
+       ----------------------------------------------------- */
+
+    document.documentElement
+        .setAttribute(
+            "data-lpic-v2",
+            "active"
+        );
+
+})();
 
 </script>
 
+
+<script id="lpic-v3-js">
+
+(function () {
+    "use strict";
+
+    const KEY = "lpic_v3_state";
+
+    function state() {
+        try {
+            return JSON.parse(localStorage.getItem(KEY) || "{}");
+        } catch {
+            return {};
+        }
+    }
+
+    function save(s) {
+        localStorage.setItem(KEY, JSON.stringify(s));
+    }
+
+    function toast(message) {
+        let t = document.getElementById("v3-toast");
+
+        if (!t) {
+            t = document.createElement("div");
+            t.id = "v3-toast";
+            document.body.appendChild(t);
+        }
+
+        t.textContent = message;
+        t.classList.add("show");
+
+        clearTimeout(window.__v3Toast);
+        window.__v3Toast = setTimeout(() => {
+            t.classList.remove("show");
+        }, 1800);
+    }
+
+    /* Reading progress */
+
+    function updateProgress() {
+        const doc = document.documentElement;
+        const max = doc.scrollHeight - window.innerHeight;
+
+        let percent = max > 0
+            ? (window.scrollY / max) * 100
+            : 0;
+
+        percent = Math.max(0, Math.min(100, percent));
+
+        const bar = document.getElementById("v3-reading-progress");
+        if (bar) bar.style.width = percent + "%";
+    }
+
+    /* Copy buttons */
+
+    function installCopyButtons() {
+        document.querySelectorAll("pre").forEach(pre => {
+            if (pre.querySelector(".v3-copy")) return;
+
+            const button = document.createElement("button");
+            button.className = "v3-copy";
+            button.textContent = "COPY";
+
+            button.addEventListener("click", async () => {
+                const text = pre.innerText
+                    .replace(/^COPY\s*/i, "");
+
+                try {
+                    await navigator.clipboard.writeText(text);
+                    button.textContent = "COPIED";
+                    toast("Code copied");
+
+                    setTimeout(() => {
+                        button.textContent = "COPY";
+                    }, 1200);
+                } catch {
+                    toast("Copy failed");
+                }
+            });
+
+            pre.appendChild(button);
+        });
+    }
+
+    /* Search */
+
+    function chapterData() {
+        const chapters = [];
+
+        for (let i = 1; i <= 12; i++) {
+            chapters.push({
+                title: "Chapter " + String(i).padStart(2, "0"),
+                url: "chapter-" + String(i).padStart(2, "0") + "/index.html"
+            });
+        }
+
+        return chapters;
+    }
+
+    function openSearch() {
+        const panel = document.getElementById("v3-search-panel");
+        if (!panel) return;
+
+        panel.classList.add("open");
+
+        const input = document.getElementById("v3-search-input");
+        if (input) {
+            input.value = "";
+            input.focus();
+        }
+    }
+
+    function closeSearch() {
+        const panel = document.getElementById("v3-search-panel");
+        if (panel) panel.classList.remove("open");
+    }
+
+    function installSearch() {
+        const chapters = chapterData();
+
+        const panel = document.createElement("div");
+        panel.id = "v3-search-panel";
+
+        panel.innerHTML = `
+            <div id="v3-search-box">
+                <input
+                    id="v3-search-input"
+                    type="search"
+                    placeholder="Search LPIC chapters..."
+                    autocomplete="off"
+                >
+                <div id="v3-search-results"></div>
+            </div>
+        `;
+
+        document.body.appendChild(panel);
+
+        const input = panel.querySelector("#v3-search-input");
+        const results = panel.querySelector("#v3-search-results");
+
+        function render() {
+            const q = input.value.trim().toLowerCase();
+
+            if (!q) {
+                results.innerHTML = `
+                    <div class="v3-result">
+                        Type a chapter name or keyword...
+                        <small>Search across the LPIC-1 WebBook</small>
+                    </div>
+                `;
+                return;
+            }
+
+            const found = chapters.filter(c =>
+                c.title.toLowerCase().includes(q)
+            );
+
+            results.innerHTML = found.length
+                ? found.map(c => `
+                    <a class="v3-result" href="${c.url}">
+                        ${c.title}
+                        <small>Open chapter</small>
+                    </a>
+                `).join("")
+                : `
+                    <div class="v3-result">
+                        No matching chapter
+                        <small>Try Chapter 01, Chapter 02, etc.</small>
+                    </div>
+                `;
+        }
+
+        input.addEventListener("input", render);
+
+        panel.addEventListener("click", e => {
+            if (e.target === panel) closeSearch();
+        });
+
+        window.__v3OpenSearch = openSearch;
+        window.__v3CloseSearch = closeSearch;
+    }
+
+    /* Control buttons */
+
+    function installControls() {
+        const box = document.createElement("div");
+        box.id = "v3-controls";
+
+        box.innerHTML = `
+            <button class="v3-control" id="v3-search-btn" title="Search">⌕</button>
+            <button class="v3-control" id="v3-theme-btn" title="Toggle theme">◐</button>
+            <button class="v3-control" id="v3-top-btn" title="Back to top">↑</button>
+        `;
+
+        document.body.appendChild(box);
+
+        document.getElementById("v3-search-btn")
+            .addEventListener("click", openSearch);
+
+        document.getElementById("v3-top-btn")
+            .addEventListener("click", () =>
+                window.scrollTo({ top: 0, behavior: "smooth" })
+            );
+
+        document.getElementById("v3-theme-btn")
+            .addEventListener("click", () => {
+                document.body.classList.toggle("v3-light");
+
+                const s = state();
+                s.light = document.body.classList.contains("v3-light");
+                save(s);
+
+                toast(s.light ? "Light mode" : "Dark mode");
+            });
+    }
+
+    function restoreTheme() {
+        const s = state();
+
+        if (s.light) {
+            document.body.classList.add("v3-light");
+        }
+    }
+
+    /* Chapter completion */
+
+    function installCompletion() {
+        const path = location.pathname;
+        const match = path.match(/chapter-(\d+)/);
+
+        if (!match) return;
+
+        const chapter = match[1];
+        const s = state();
+
+        const button = document.createElement("button");
+
+        button.textContent =
+            s["completed_" + chapter]
+                ? "✓ COMPLETED"
+                : "MARK AS COMPLETED";
+
+        button.style.cssText = `
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            z-index: 9980;
+            padding: 10px 14px;
+            border: 1px solid rgba(0,229,255,.22);
+            border-radius: 10px;
+            background: rgba(8,14,21,.88);
+            color: #00e5ff;
+            cursor: pointer;
+            backdrop-filter: blur(12px);
+        `;
+
+        button.addEventListener("click", () => {
+            const key = "completed_" + chapter;
+            s[key] = !s[key];
+            save(s);
+
+            button.textContent =
+                s[key] ? "✓ COMPLETED" : "MARK AS COMPLETED";
+
+            toast(s[key]
+                ? "Chapter marked completed"
+                : "Completion removed");
+        });
+
+        document.body.appendChild(button);
+    }
+
+    /* Chapter special identity */
+
+    function identifyChapter() {
+        const match = location.pathname.match(/chapter-(\d+)/);
+
+        if (!match) return;
+
+        const n = Number(match[1]);
+
+        if (n === 11) {
+            document.body.classList.add("v3-golden");
+        }
+
+        if (n === 12) {
+            document.body.classList.add("v3-exam");
+        }
+    }
+
+    /* Keyboard shortcuts */
+
+    function shortcuts() {
+        document.addEventListener("keydown", e => {
+            if (e.ctrlKey && e.key.toLowerCase() === "k") {
+                e.preventDefault();
+                openSearch();
+            }
+
+            if (e.key === "Escape") {
+                closeSearch();
+            }
+        });
+    }
+
+    function boot() {
+        const progress = document.createElement("div");
+        progress.id = "v3-reading-progress";
+        document.body.prepend(progress);
+
+        installSearch();
+        installControls();
+        installCopyButtons();
+        installCompletion();
+        identifyChapter();
+        restoreTheme();
+        shortcuts();
+
+        updateProgress();
+
+        window.addEventListener("scroll", updateProgress, { passive: true });
+        window.addEventListener("resize", updateProgress);
+
+        /* External links */
+
+        document.querySelectorAll("a[href^='http']").forEach(a => {
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+        });
+
+        toast("LPIC-1 WebBook V3");
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot);
+    } else {
+        boot();
+    }
+
+})();
+
+</script>
+<script src="assets/js/v5-ultra.js"></script>
 </body>
 </html>

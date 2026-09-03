@@ -1,0 +1,978 @@
+(() => {
+"use strict";
+
+const KEY = "LPIC_V5_ULTRA_STATE";
+
+const DEFAULT = {
+  done: {},
+  bookmarks: [],
+  notes: {},
+  xp: 0,
+  theme: "dark",
+  lastChapter: 0,
+  quiz: {}
+};
+
+function load() {
+  try {
+    return Object.assign(
+      {},
+      DEFAULT,
+      JSON.parse(localStorage.getItem(KEY) || "{}")
+    );
+  } catch (e) {
+    return Object.assign({}, DEFAULT);
+  }
+}
+
+const state = load();
+
+function save() {
+  localStorage.setItem(KEY, JSON.stringify(state));
+}
+
+function chapterNumber() {
+  const m = location.pathname.match(/chapter-(\d{2})/);
+  return m ? Number(m[1]) : 0;
+}
+
+function chapterUrl(n) {
+  return `chapter-${String(n).padStart(2,"0")}/index.html`;
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[c]);
+}
+
+function toast(message) {
+  let el = document.querySelector(".v5-toast");
+
+  if (!el) {
+    el = document.createElement("div");
+    el.className = "v5-toast";
+    document.body.appendChild(el);
+  }
+
+  el.textContent = message;
+  el.classList.add("show");
+
+  setTimeout(() => {
+    el.classList.remove("show");
+  }, 1800);
+}
+
+function applyTheme() {
+  document.body.classList.toggle(
+    "v5-light",
+    state.theme === "light"
+  );
+}
+
+function toggleTheme() {
+  state.theme =
+    state.theme === "light" ? "dark" : "light";
+
+  save();
+  applyTheme();
+
+  toast(
+    state.theme === "light"
+      ? "Light mode enabled"
+      : "Dark mode enabled"
+  );
+}
+
+function completeCurrent() {
+  const n = chapterNumber();
+
+  if (!n) return;
+
+  state.done[n] = !state.done[n];
+
+  state.xp =
+    Object.keys(state.done)
+      .filter(k => state.done[k])
+      .length * 100;
+
+  state.lastChapter = n;
+
+  save();
+  updateTools();
+
+  if (!chapterNumber()) {
+    enhanceAchievementCards();
+  } else {
+    const dashboardCards = document.querySelectorAll(
+      ".v5-dashboard .v5-achievement"
+    );
+
+    if (dashboardCards.length) {
+      enhanceAchievementCards();
+    }
+  }
+
+  toast(
+    state.done[n]
+      ? "Chapter completed ✓ +100 XP"
+      : "Completion removed"
+  );
+}
+
+function toggleBookmark() {
+  const n = chapterNumber();
+
+  if (!n) return;
+
+  const key = location.pathname;
+
+  const index = state.bookmarks.findIndex(
+    item => item.key === key
+  );
+
+  if (index >= 0) {
+    state.bookmarks.splice(index,1);
+    toast("Bookmark removed");
+  } else {
+    state.bookmarks.push({
+      key,
+      url: location.href,
+      title: document.title,
+      chapter: n
+    });
+    toast("Bookmark saved ★");
+  }
+
+  save();
+  updateTools();
+}
+
+function saveNote() {
+  const n = chapterNumber();
+
+  if (!n) return;
+
+  const area = document.querySelector("#v5-note");
+
+  if (!area) return;
+
+  state.notes[n] = area.value;
+
+  save();
+
+  toast("Note saved ✓");
+}
+
+function updateTools() {
+  const n = chapterNumber();
+
+  const done = document.querySelector(
+    "[data-v5-done]"
+  );
+
+  const bookmark = document.querySelector(
+    "[data-v5-bookmark]"
+  );
+
+  if (done && n) {
+    done.textContent =
+      state.done[n]
+        ? "✓ Completed"
+        : "Mark complete";
+  }
+
+  if (bookmark && n) {
+    const saved = state.bookmarks.some(
+      x => x.key === location.pathname
+    );
+
+    bookmark.textContent =
+      saved
+        ? "★ Bookmarked"
+        : "☆ Bookmark";
+  }
+}
+
+function modal(title, content) {
+  const old = document.querySelector(".v5-modal");
+
+  if (old) old.remove();
+
+  const modal = document.createElement("div");
+
+  modal.className = "v5-modal open";
+
+  modal.innerHTML = `
+    <div class="v5-modal-box">
+      <div style="display:flex;justify-content:space-between;gap:15px">
+        <h2>${title}</h2>
+        <button class="v5-button" data-v5-close>
+          Close
+        </button>
+      </div>
+      ${content}
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  modal.addEventListener("click", e => {
+    if (
+      e.target === modal ||
+      e.target.closest("[data-v5-close]")
+    ) {
+      modal.remove();
+    }
+  });
+
+  return modal;
+}
+
+function search() {
+  const chapters = Array.from(
+    {length:12},
+    (_,i) => i + 1
+  );
+
+  const content = `
+    <input
+      id="v5-search-input"
+      class="v5-search"
+      placeholder="Search chapters..."
+      autofocus
+    >
+
+    <div id="v5-results"></div>
+  `;
+
+  const m = modal(
+    "Global Search",
+    content
+  );
+
+  const input = m.querySelector(
+    "#v5-search-input"
+  );
+
+  const results = m.querySelector(
+    "#v5-results"
+  );
+
+  function render(query) {
+    const q = query.toLowerCase().trim();
+
+    results.innerHTML = chapters
+      .filter(n =>
+        !q ||
+        `chapter ${n}`.includes(q) ||
+        `ch${n}`.includes(q)
+      )
+      .map(n => `
+        <div class="v5-result">
+          <a href="${chapterUrl(n)}">
+            Chapter ${String(n).padStart(2,"0")}
+          </a>
+          <div style="color:var(--v5-muted);margin-top:5px">
+            Open chapter
+          </div>
+        </div>
+      `)
+      .join("");
+  }
+
+  input.addEventListener(
+    "input",
+    () => render(input.value)
+  );
+
+  render("");
+}
+
+function notes() {
+  const n = chapterNumber();
+
+  if (!n) {
+    toast("Open a chapter first");
+    return;
+  }
+
+  const existing = state.notes[n] || "";
+
+  const m = modal(
+    `Chapter ${String(n).padStart(2,"0")} Notes`,
+    `
+      <textarea
+        id="v5-note"
+        class="v5-note"
+        placeholder="Write your study notes here..."
+      >${escapeHTML(existing)}</textarea>
+
+      <div style="margin-top:12px">
+        <button class="v5-button" data-v5-save-note>
+          Save Note
+        </button>
+      </div>
+    `
+  );
+
+  m.querySelector(
+    "[data-v5-save-note]"
+  ).addEventListener(
+    "click",
+    saveNote
+  );
+}
+
+function achievements() {
+  const completed =
+    Object.keys(state.done)
+      .filter(k => state.done[k]).length;
+
+  const achievements = [
+    {
+      icon:"⚡",
+      name:"First Step",
+      text:"Complete your first chapter.",
+      ok:completed >= 1
+    },
+    {
+      icon:"🔥",
+      name:"Halfway",
+      text:"Complete six chapters.",
+      ok:completed >= 6
+    },
+    {
+      icon:"🧠",
+      name:"Linux Scholar",
+      text:"Complete nine chapters.",
+      ok:completed >= 9
+    },
+    {
+      icon:"🏆",
+      name:"LPIC Master",
+      text:"Complete all twelve chapters.",
+      ok:completed >= 12
+    }
+  ];
+
+  modal(
+    "Achievements",
+    `
+      <div class="v5-achievements">
+        ${achievements.map(a => `
+          <div class="v5-achievement ${a.ok ? "" : "locked"}">
+            <div class="v5-achievement-icon">
+              ${a.icon}
+            </div>
+            <strong>${a.name}</strong>
+            <small>${a.text}</small>
+          </div>
+        `).join("")}
+      </div>
+    `
+  );
+}
+
+function quiz() {
+  const questions = [
+    {
+      q:"Which command displays the current working directory?",
+      a:["pwd","cd","ls","where"],
+      correct:0
+    },
+    {
+      q:"Which command lists directory contents?",
+      a:["show","ls","dirlist","files"],
+      correct:1
+    },
+    {
+      q:"Which command changes the current directory?",
+      a:["move","cd","chdironly","goto"],
+      correct:1
+    },
+    {
+      q:"Which command removes a file?",
+      a:["delete","erase","rm","remove-file"],
+      correct:2
+    },
+    {
+      q:"Which command displays a manual page?",
+      a:["help","manual","man","docs"],
+      correct:2
+    }
+  ];
+
+  let index = 0;
+  let score = 0;
+
+  const m = modal(
+    "LPIC Practice Quiz",
+    `<div id="v5-quiz"></div>`
+  );
+
+  const box = m.querySelector("#v5-quiz");
+
+  function render() {
+    if (index >= questions.length) {
+      const best = state.quiz.best || 0;
+
+      if (score > best) {
+        state.quiz.best = score;
+        save();
+      }
+
+      box.innerHTML = `
+        <div class="v5-hero">
+          <div class="v5-kicker">QUIZ COMPLETE</div>
+          <div class="v5-title">
+            ${score}/${questions.length}
+          </div>
+          <div class="v5-subtitle">
+            Best score: ${Math.max(score,best)}
+          </div>
+        </div>
+      `;
+
+      return;
+    }
+
+    const q = questions[index];
+
+    box.innerHTML = `
+      <div class="v5-kicker">
+        QUESTION ${index + 1}/${questions.length}
+      </div>
+
+      <h3>${q.q}</h3>
+
+      <div style="display:grid;gap:10px">
+        ${q.a.map((answer,i) => `
+          <button
+            class="v5-button"
+            data-answer="${i}"
+            style="text-align:left"
+          >
+            ${String.fromCharCode(65+i)}.
+            ${answer}
+          </button>
+        `).join("")}
+      </div>
+    `;
+
+    box.querySelectorAll("[data-answer]")
+      .forEach(button => {
+        button.addEventListener(
+          "click",
+          () => {
+            if (
+              Number(button.dataset.answer) ===
+              q.correct
+            ) {
+              score++;
+              toast("Correct ✓");
+            } else {
+              toast("Incorrect");
+            }
+
+            index++;
+            render();
+          }
+        );
+      });
+  }
+
+  render();
+}
+
+
+function achievementDefinitions() {
+  return [
+    {
+      icon: "⚡",
+      name: "First Step",
+      description: "Complete your first LPIC-1 chapter.",
+      target: 1
+    },
+    {
+      icon: "🔥",
+      name: "Halfway",
+      description: "Complete six LPIC-1 chapters.",
+      target: 6
+    },
+    {
+      icon: "🧠",
+      name: "Linux Scholar",
+      description: "Complete nine LPIC-1 chapters.",
+      target: 9
+    },
+    {
+      icon: "🏆",
+      name: "LPIC Master",
+      description: "Complete all twelve LPIC-1 chapters.",
+      target: 12
+    }
+  ];
+}
+
+function achievementProgress(target) {
+  const completed = Object.keys(state.done)
+    .filter(k => state.done[k])
+    .length;
+
+  return Math.min(completed, target);
+}
+
+function showAchievementDetails(index) {
+  const list = achievementDefinitions();
+  const a = list[index];
+
+  if (!a) return;
+
+  const completed = Object.keys(state.done)
+    .filter(k => state.done[k])
+    .length;
+
+  const progress = achievementProgress(a.target);
+  const unlocked = completed >= a.target;
+  const percent = Math.min(
+    100,
+    Math.round((progress / a.target) * 100)
+  );
+
+  modal(
+    `${a.icon} ${a.name}`,
+    `
+      <div class="v5-achievement-detail">
+
+        <div class="v5-achievement-detail-icon">
+          ${a.icon}
+        </div>
+
+        <div class="v5-achievement-status ${unlocked ? "unlocked" : "locked"}">
+          ${unlocked ? "✓ UNLOCKED" : "🔒 LOCKED"}
+        </div>
+
+        <h3>${a.name}</h3>
+
+        <p class="v5-achievement-description">
+          ${a.description}
+        </p>
+
+        <div class="v5-achievement-progress-row">
+          <span>Progress</span>
+          <strong>${progress} / ${a.target}</strong>
+        </div>
+
+        <div class="v5-achievement-progress">
+          <span style="width:${percent}%"></span>
+        </div>
+
+        <div class="v5-achievement-percent">
+          ${percent}% complete
+        </div>
+
+        ${
+          unlocked
+          ? `
+            <div class="v5-achievement-unlocked-box">
+              🎉 Achievement unlocked!
+              <br>
+              Keep going toward the next milestone.
+            </div>
+          `
+          : `
+            <div class="v5-achievement-locked-box">
+              🔒 Complete ${a.target - progress}
+              more chapter${a.target - progress === 1 ? "" : "s"}
+              to unlock this achievement.
+            </div>
+          `
+        }
+
+      </div>
+    `
+  );
+}
+
+function enhanceAchievementCards() {
+  const cards = document.querySelectorAll(
+    ".v5-dashboard .v5-achievement"
+  );
+
+  if (!cards.length) return;
+
+  const list = achievementDefinitions();
+
+  const completed = Object.keys(state.done)
+    .filter(k => state.done[k])
+    .length;
+
+  cards.forEach((card, index) => {
+
+    const a = list[index];
+
+    if (!a) return;
+
+    const progress = achievementProgress(a.target);
+    const unlocked = completed >= a.target;
+    const percent = Math.min(
+      100,
+      Math.round((progress / a.target) * 100)
+    );
+
+    card.classList.toggle("v5-achievement-unlocked", unlocked);
+    card.classList.toggle("v5-achievement-locked", !unlocked);
+
+    card.dataset.achievementIndex = index;
+    card.setAttribute("role", "button");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute(
+      "aria-label",
+      `${a.name}: ${progress} of ${a.target}`
+    );
+
+    let status = card.querySelector(
+      ".v5-achievement-status-mini"
+    );
+
+    if (!status) {
+      status = document.createElement("span");
+      status.className = "v5-achievement-status-mini";
+      card.prepend(status);
+    }
+
+    status.textContent =
+      unlocked ? "✓ UNLOCKED" : "🔒 LOCKED";
+
+    status.classList.toggle("unlocked", unlocked);
+
+    let progressBox = card.querySelector(
+      ".v5-achievement-progress-mini"
+    );
+
+    if (!progressBox) {
+      progressBox = document.createElement("div");
+      progressBox.className = "v5-achievement-progress-mini";
+
+      progressBox.innerHTML = `
+        <span></span>
+      `;
+
+      card.appendChild(progressBox);
+    }
+
+    const bar = progressBox.querySelector("span");
+
+    if (bar) {
+      bar.style.width = `${percent}%`;
+    }
+
+    let progressText = card.querySelector(
+      ".v5-achievement-progress-text"
+    );
+
+    if (!progressText) {
+      progressText = document.createElement("small");
+      progressText.className =
+        "v5-achievement-progress-text";
+
+      card.appendChild(progressText);
+    }
+
+    progressText.textContent =
+      `${progress} / ${a.target}`;
+
+    card.onclick = function(event) {
+      event.preventDefault();
+      showAchievementDetails(index);
+    };
+
+    card.onkeydown = function(event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        showAchievementDetails(index);
+      }
+    };
+  });
+}
+
+function dashboard() {
+  const root = document.createElement("main");
+
+  root.className = "v5-dashboard";
+
+  const completed =
+    Object.keys(state.done)
+      .filter(k => state.done[k]).length;
+
+  const percent =
+    Math.round((completed / 12) * 100);
+
+  const level =
+    Math.floor(state.xp / 200) + 1;
+
+  root.innerHTML = `
+    <section class="v5-hero">
+
+      <div class="v5-kicker">
+        LPIC-1 // COMMAND CENTER
+      </div>
+
+      <div class="v5-title">
+        Mission Control
+      </div>
+
+      <div class="v5-subtitle">
+        Your offline LPIC-1 learning platform.
+        Track progress, build XP, take quizzes,
+        save notes and prepare for the final exam.
+      </div>
+
+      <div class="v5-progress">
+        <span style="width:${percent}%"></span>
+      </div>
+
+      <div class="v5-subtitle" style="margin-top:9px">
+        ${completed}/12 chapters completed
+        • ${percent}% complete
+      </div>
+
+    </section>
+
+    <div class="v5-stats">
+
+      <div class="v5-stat">
+        <span class="v5-stat-value">
+          ${state.xp}
+        </span>
+        <span class="v5-stat-label">
+          XP
+        </span>
+      </div>
+
+      <div class="v5-stat">
+        <span class="v5-stat-value">
+          ${level}
+        </span>
+        <span class="v5-stat-label">
+          Level
+        </span>
+      </div>
+
+      <div class="v5-stat">
+        <span class="v5-stat-value">
+          ${completed}
+        </span>
+        <span class="v5-stat-label">
+          Completed
+        </span>
+      </div>
+
+      <div class="v5-stat">
+        <span class="v5-stat-value">
+          ${state.bookmarks.length}
+        </span>
+        <span class="v5-stat-label">
+          Bookmarks
+        </span>
+      </div>
+
+    </div>
+
+    <section class="v5-section">
+
+      <div class="v5-section-title">
+        Chapter Matrix
+      </div>
+
+      <div class="v5-chapters">
+
+        ${Array.from({length:12},(_,i)=>{
+          const n=i+1;
+          const done=!!state.done[n];
+
+          return `
+            <div class="v5-chapter ${done?"v5-done":""}">
+
+              <span class="v5-badge">
+                ${done ? "✓ COMPLETE" : "PENDING"}
+              </span>
+
+              <a href="${chapterUrl(n)}">
+                Chapter ${String(n).padStart(2,"0")}
+              </a>
+
+              <small>
+                ${n===11
+                  ?"Golden Review"
+                  :n===12
+                    ?"Final Assessment"
+                    :"LPIC-1 Study Module"}
+              </small>
+
+            </div>
+          `;
+        }).join("")}
+
+      </div>
+
+    </section>
+
+    <section class="v5-section">
+
+      <div class="v5-section-title">
+        Achievements
+      </div>
+
+      <div class="v5-achievements">
+
+        <div class="v5-achievement ${completed>=1?"":"locked"}">
+          <div class="v5-achievement-icon">⚡</div>
+          <strong>First Step</strong>
+          <small>Complete chapter one.</small>
+        </div>
+
+        <div class="v5-achievement ${completed>=6?"":"locked"}">
+          <div class="v5-achievement-icon">🔥</div>
+          <strong>Halfway</strong>
+          <small>Complete six chapters.</small>
+        </div>
+
+        <div class="v5-achievement ${completed>=9?"":"locked"}">
+          <div class="v5-achievement-icon">🧠</div>
+          <strong>Linux Scholar</strong>
+          <small>Complete nine chapters.</small>
+        </div>
+
+        <div class="v5-achievement ${completed>=12?"":"locked"}">
+          <div class="v5-achievement-icon">🏆</div>
+          <strong>LPIC Master</strong>
+          <small>Complete all twelve chapters.</small>
+        </div>
+
+      </div>
+
+    </section>
+  `;
+
+  document.body.prepend(root);
+}
+
+function installTools() {
+  const existing = document.querySelectorAll(".v5-tools");
+
+  existing.forEach(el => el.remove());
+
+  const n = chapterNumber();
+
+  const tools = document.createElement("div");
+  tools.className = "v5-tools";
+
+  tools.innerHTML = `
+    ${n ? `
+      <button type="button" class="v5-button" data-v5-done>
+        ${state.done[n] ? "✓ Completed" : "Mark complete"}
+      </button>
+
+      <button type="button" class="v5-button" data-v5-bookmark>
+        ☆ Bookmark
+      </button>
+
+      <button type="button" class="v5-button" data-v5-notes>
+        📝 Notes
+      </button>
+    ` : ""}
+
+    <button type="button" class="v5-button" data-v5-search>
+      🔎 Search
+    </button>
+
+    <button type="button" class="v5-button" data-v5-quiz>
+      🧠 Quiz
+    </button>
+
+    <button type="button" class="v5-button" data-v5-achievements>
+      🏆 Achievements
+    </button>
+
+    <button type="button" class="v5-button" data-v5-theme>
+      ◐ Theme
+    </button>
+  `;
+
+  document.body.appendChild(tools);
+
+  function bind(selector, handler) {
+    const button = tools.querySelector(selector);
+
+    if (!button) return;
+
+    button.addEventListener("click", function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      try {
+        handler(event);
+      } catch (error) {
+        console.error("V5 control error:", error);
+        toast("Control error — check browser console");
+      }
+    });
+  }
+
+  bind("[data-v5-done]", completeCurrent);
+  bind("[data-v5-bookmark]", toggleBookmark);
+  bind("[data-v5-notes]", notes);
+  bind("[data-v5-search]", search);
+  bind("[data-v5-quiz]", quiz);
+  bind("[data-v5-achievements]", achievements);
+  bind("[data-v5-theme]", toggleTheme);
+
+  updateTools();
+}
+
+function specialTheme() {
+  const n = chapterNumber();
+
+  if (n === 11) {
+    document.body.classList.add("v5-golden");
+  }
+
+  if (n === 12) {
+    document.body.classList.add("v5-exam");
+  }
+}
+
+function init() {
+  document.body.classList.add("v5");
+
+  applyTheme();
+
+  specialTheme();
+
+  installTools();
+
+  if (!chapterNumber()) {
+    dashboard();
+    enhanceAchievementCards();
+  }
+
+  const n = chapterNumber();
+
+  if (n) {
+    state.lastChapter = n;
+    save();
+  }
+}
+
+document.addEventListener(
+  "DOMContentLoaded",
+  init
+);
+
+})();
